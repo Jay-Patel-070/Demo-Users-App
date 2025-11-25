@@ -1,8 +1,8 @@
+import 'dart:convert';
 import 'dart:io';
-import 'package:demo_users_app/features/auth/model/login_response_model.dart';
-import 'package:demo_users_app/features/users/model/user_response.dart';
 import 'package:demo_users_app/helper/shared_preference_helper.dart';
 import 'package:demo_users_app/main.dart';
+import 'package:demo_users_app/screens/users/model/user_response.dart';
 import 'package:demo_users_app/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -21,13 +21,13 @@ Widget sbw(double width) {
 }
 
 getUserData () {
-SharedPrefsHelper sharedprefshelper = SharedPrefsHelper();
   final userlocaldata = sharedprefshelper.getData(
-    LocalStorageKeys.accessToken);
+    LocalStorageKeys.userData);
   if (userlocaldata != null) {
-    userData = UserResponse.fromJson(userlocaldata);
+    final userData = UserResponse.fromJson(jsonDecode(userlocaldata));
+    return userData;
   }
-  return userData;
+  return null;
 }
 
 String getAccessToken() {
@@ -81,17 +81,17 @@ class Cm {
   static void showSnackBar(
       BuildContext context, {
         required String message,
-        Color bg = AppColors.primarycolor,
+        Color bg = AppColors.redcolor,
       }) {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(
         SnackBar(
-          content: Text(message,textAlign: TextAlign.center,style: TextStyle(fontFamily: Appfonts.robotobold,fontSize: 20),),
+          content: Text(message,textAlign: TextAlign.center,style: TextStyle(fontFamily: Appfonts.robotobold,fontSize: AppFontSizes.xl,),),
           backgroundColor: bg,
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(
-            borderRadius: .circular(10)
+            borderRadius: .circular(AppRadius.md),
           ),
           // margin: const EdgeInsets.only(top: , left: 10, right: 10),
           dismissDirection: DismissDirection.up,

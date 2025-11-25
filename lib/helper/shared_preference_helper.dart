@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:demo_users_app/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPrefsHelper {
@@ -39,6 +40,7 @@ class SharedPrefsHelper {
   // Method to clear all data
   Future<bool> clearAllData() async {
     if (_prefs == null) await init();
+    userData = null;
     return _prefs!.clear();
   }
 }

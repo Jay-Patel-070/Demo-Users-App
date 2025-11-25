@@ -1,0 +1,54 @@
+import 'dart:developer';
+import 'package:demo_users_app/bottom_navigation_barr.dart';
+import 'package:demo_users_app/cm.dart';
+import 'package:demo_users_app/main.dart';
+import 'package:demo_users_app/screens/auth/login_screen.dart';
+import 'package:demo_users_app/utils/utils.dart';
+import 'package:flutter/material.dart';
+
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    navigateFromSplash();
+    super.initState();
+  }
+
+  Future<void> navigateFromSplash() async {
+    final String? token = getAccessToken();
+    userData = getUserData();
+    Future.delayed(Duration(seconds: 2),() {
+      if (token != null && token.isNotEmpty) {
+        log("---------- Token ---------- ${token}");
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => BottomNavigationBarr()),
+        );
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => LoginScreen()),
+        );
+      }
+    },);
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColors.primarycolor,
+      body: Center(
+        child: Text(AppLabels.demo_users_app,style: TextStyle(
+          color: AppColors.whitecolor,
+          fontSize: AppFontSizes.display,
+          fontFamily: Appfonts.robotobold
+        ),),
+      ),
+    );
+  }
+}

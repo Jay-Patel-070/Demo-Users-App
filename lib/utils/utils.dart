@@ -6,16 +6,20 @@ class AppColors {
   static const Color primarycolor = Color(0xFF4A90E2);
   static const Color secondarycolor = Color(0x964A90E2);
   static const Color greywithshade = Color.fromRGBO(117, 117, 117, 1);
+  static const Color greywithshade2 = Color.fromRGBO(231, 226, 226, 1.0);
   static const Color whitecolor = Colors.white;
   static const Color greencolor = Colors.green;
   static const Color transparent = Colors.transparent;
   static const Color blackcolor = Colors.black;
-  static const Color greycolor = Colors.grey;
+  static Color greycolor = Colors.grey;
   static const Color redcolor = Colors.red;
   static const Color redwithshade = Color(0xFF8B0000);
+  static Color bordercolor = Colors.grey;
+  static Color rating = Colors.amber;
 }
 
 class AppLabels {
+  static const String demo_users_app = "Demo users app";
   static const String login = 'Log in';
   static const String full_name = 'Full Name';
   static const String first_name = 'First Name';
@@ -32,6 +36,19 @@ class AppLabels {
   static const String log_in = 'Log In';
   static const String users = 'Users';
   static const String edit = 'Edit';
+  static const String settings = 'Settings';
+  static const String general = 'General';
+  static const String profile = 'Profile';
+  static const String theme = 'Theme';
+  static const String system = 'System';
+  static const String account = 'Account';
+  static const String logout = 'Logout';
+  static const String delete_account = 'Delete Account';
+  static const String edit_profile = 'Edit Profile';
+  static const String save_changes = 'Save changes';
+  static const String products = 'Products';
+  static const String product_details = 'Product Details';
+  static const String add_to_cart = 'Add to Cart';
 }
 
 class AppStrings {
@@ -48,6 +65,7 @@ class AppStrings {
   static const String already_have_an_account = 'Already have an account?';
   static const String search_by_name_or_email = 'Search by name or email...';
   static const String Search = 'Search...';
+  static const String search_products_by_name_or_sku = 'Search Products by name or sku';
 }
 
 class Appfonts {
@@ -60,4 +78,43 @@ class Appfonts {
 
 class LocalStorageKeys {
   static const String accessToken = "accessToken";
+  static const String userData = "userData";
+}
+
+class AppFontSizes {
+  static const double xs = 10;
+  static const double sm = 12;
+  static const double md = 14;  // primary body text
+  static const double lg = 16;  // common title text
+  static const double xl = 18;
+  static const double xxl = 22;
+  static const double display = 28;
+}
+
+class AppRadius {
+  static const double xs = 4;
+  static const double sm = 6;
+  static const double md = 10;
+  static const double lg = 12;
+  static const double xl = 16;
+  static const double circle = 1000;
+}
+
+class AppPadding {
+  static const double xs = 4;
+  static const double sm = 8;
+  static const double md = 12;
+  static const double lg = 16;
+  static const double xl = 24;
+  static const double xxl = 32;
+}
+
+class AppSizes {
+  static const double xs = 4;
+  static const double sm = 8;
+  static const double md = 12;
+  static const double lg = 16;
+  static const double xl = 24;
+  static const double xxl = 32;
+  static const double xxxl = 48;
 }

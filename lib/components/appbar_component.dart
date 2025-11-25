@@ -14,7 +14,7 @@ class AppbarComponent extends StatelessWidget {
       forceMaterialTransparency: true,
       title: Text(
         title,
-        style: TextStyle(fontSize: 25, fontFamily: Appfonts.robotomedium),
+        style: TextStyle(fontSize: AppFontSizes.xxl, fontFamily: Appfonts.robotomedium),
       ),
       actions: actions,
     );

@@ -14,10 +14,10 @@ class ButtonComponent extends StatelessWidget {
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.primarycolor,
-          padding: .symmetric(vertical:10),
+          padding: .symmetric(vertical:AppPadding.sm),
           minimumSize: Size(double.infinity,0),
           shape: RoundedRectangleBorder(
-            borderRadius: .circular(10)
+            borderRadius: .circular(AppRadius.md),
           ),
           disabledBackgroundColor: AppColors.primarycolor
         ),
@@ -25,7 +25,7 @@ class ButtonComponent extends StatelessWidget {
         child: isloading == true ? Transform.scale(scale: 0.6,child: CircularProgressIndicator(color: AppColors.whitecolor,)) : Text(buttontitle,textAlign: TextAlign.center,style: TextStyle(
           color: Colors.white,
           fontFamily: Appfonts.robotomedium,
-          fontSize: 20,
+          fontSize: AppFontSizes.xl,
           fontWeight: FontWeight.w500,
         ),),
       ),

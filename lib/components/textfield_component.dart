@@ -6,7 +6,7 @@ class TextfieldComponent extends StatelessWidget {
   final VoidCallback? suffixicontap;
   final String? Function(String?)? validator;
   final TextEditingController? controller;
-  final String hinttext;
+  final String? hinttext;
   final String? label;
   final Icon? prefixicon;
   IconData? suffixicon;
@@ -18,7 +18,7 @@ class TextfieldComponent extends StatelessWidget {
     this.ontap,
     this.controller,
     this.validator,
-    required this.hinttext,
+    this.hinttext,
     this.prefixicon,
     this.obsecuretext,
     this.suffixicon,
@@ -39,7 +39,7 @@ class TextfieldComponent extends StatelessWidget {
           style: TextStyle(
             fontFamily: Appfonts.roboto,
             fontWeight: FontWeight.normal,
-            fontSize: 18,
+            fontSize: AppFontSizes.xl,
           ),
         ),
         SizedBox(height: 10),

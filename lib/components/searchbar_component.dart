@@ -4,55 +4,55 @@ import 'package:flutter/material.dart';
 
 class SearchbarComponent extends StatelessWidget {
   final TextEditingController controller;
+  final Color? backgroundcolor;
   final String hintText;
   final ValueChanged<String>? onChanged;
+  final bool? showborder;
   final VoidCallback? onClear;
+  final FocusNode? focusNode;
 
   const SearchbarComponent({
     super.key,
     required this.controller,
+    this.showborder = true,
+    this.backgroundcolor = AppColors.whitecolor,
     this.hintText = AppStrings.Search,
     this.onChanged,
     this.onClear,
+    this.focusNode
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 15),
       decoration: BoxDecoration(
-        color: AppColors.whitecolor,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
+        color: backgroundcolor,
+        borderRadius: BorderRadius.circular(AppRadius.lg),
+        border: showborder==true ? Border.all(
           width: 0.4,
           color: AppColors.secondarycolor
-        )
+        ) : null
       ),
-      child: Row(
-        children: [
-          Icon(Icons.search, color: AppColors.greywithshade,fontWeight: FontWeight.w500,),
-          sbw(30),
-          Expanded(
-            child: TextField(
-              controller: controller,
-              onChanged: onChanged,
-              decoration: InputDecoration(
+      child: ValueListenableBuilder(
+        valueListenable: controller,
+        builder: (context, value, child) {
+          return TextField(
+            focusNode: focusNode,
+            controller: controller,
+            onChanged: onChanged,
+            decoration: InputDecoration(
                 border: InputBorder.none,
                 hintText: hintText,
                 hintStyle: TextStyle(
                   color: AppColors.greycolor,
                   fontFamily: Appfonts.roboto,
-                  fontSize: 18
-                )
-              ),
+                  fontSize: AppFontSizes.xl,
+                ),
+                prefixIcon: Icon(Icons.search, color: AppColors.greywithshade,fontWeight: FontWeight.w500,),
+                suffixIcon:  value.text.isNotEmpty ? IconButton(onPressed: onClear, icon: Icon(Icons.close, color: AppColors.greywithshade,fontWeight: FontWeight.w500) ) : null
             ),
-          ),
-          if (controller.text.isNotEmpty)
-            GestureDetector(
-              onTap: onClear,
-              child: Icon(Icons.close, color: Colors.grey),
-            ),
-        ],
+          );
+        },
       ),
     );
   }

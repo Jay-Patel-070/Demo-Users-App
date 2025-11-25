@@ -21,12 +21,12 @@ class UserListtileComponent extends StatelessWidget {
       title: Text(name,
       style: TextStyle(
         fontFamily: Appfonts.robotomedium,
-        fontSize: 20
+        fontSize: AppFontSizes.xl,
       ),
       ),
       subtitle: Text(email,style: TextStyle(
           fontFamily: Appfonts.roboto,
-          fontSize: 16,
+          fontSize: AppFontSizes.lg,
         color: AppColors.greywithshade
       ),),
       trailing: showicon == true ? Icon(Icons.keyboard_arrow_right_outlined,

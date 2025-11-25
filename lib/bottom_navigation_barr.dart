@@ -1,7 +1,7 @@
-import 'package:demo_users_app/features/auth/model/login_response_model.dart';
-import 'package:demo_users_app/features/users/screens/all_user_screen.dart';
-import 'package:demo_users_app/features/users/screens/settings_screen.dart';
 import 'package:demo_users_app/main.dart';
+import 'package:demo_users_app/screens/product/product_screen.dart';
+import 'package:demo_users_app/screens/users/all_user_screen.dart';
+import 'package:demo_users_app/screens/users/settings_screen.dart';
 import 'package:demo_users_app/utils/utils.dart';
 import 'package:flutter/material.dart';
 
@@ -15,7 +15,8 @@ class BottomNavigationBarr extends StatefulWidget {
 class _BottomNavigationBarrState extends State<BottomNavigationBarr> {
   final List screens = [
     AllUserScreen(),
-    SettingsScreen()
+    SettingsScreen(),
+    ProductScreen()
   ];
 
   int _selectedIndex = 0;
@@ -43,12 +44,16 @@ class _BottomNavigationBarrState extends State<BottomNavigationBarr> {
             items:const <BottomNavigationBarItem>[
               BottomNavigationBarItem(
                 icon: Icon(Icons.group_outlined),
-                label: 'Users',
+                label: AppLabels.users,
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.settings_outlined),
-                label: 'Settings',
+                label: AppLabels.settings,
               ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.shopping_cart),
+                label: AppLabels.products,
+              )
             ],
           currentIndex: _selectedIndex,
           onTap: _onItemTapped,
@@ -57,8 +62,8 @@ class _BottomNavigationBarrState extends State<BottomNavigationBarr> {
           selectedItemColor: AppColors.primarycolor,
           iconSize: 30,
           type: BottomNavigationBarType.fixed,
-          selectedFontSize: 15,
-          unselectedFontSize: 15,
+          selectedFontSize: AppFontSizes.md,
+          unselectedFontSize: AppFontSizes.md,
           unselectedLabelStyle: TextStyle(
             fontFamily: Appfonts.robotomedium
           ),

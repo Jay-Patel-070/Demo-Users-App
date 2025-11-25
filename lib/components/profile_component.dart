@@ -16,7 +16,6 @@ class ProfileComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('Image file path $imagepath');
     return Center(
       child: GestureDetector(
         onTap: ontap,
@@ -26,7 +25,7 @@ class ProfileComponent extends StatelessWidget {
                 height: 150,
                 width: 150,
                 decoration: BoxDecoration(
-                  borderRadius: .circular(100),
+                  borderRadius: .circular(AppRadius.circle),
                   image: DecorationImage(image: imagepath == null ? AssetImage(
                     'assets/images/profile.png',
                   ) : FileImage(File(imagepath ?? '')

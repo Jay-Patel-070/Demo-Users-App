@@ -21,7 +21,7 @@ Future<dynamic> postMethod({
       headers: requestHeaders,
       body: jsonEncode(body),
     );
-    log("----------- Response -----------${response}");
+    log("----------- Response -----------${response.body}");
     return response;
   } catch (e) {
     log("POST ERROR $e");
@@ -34,12 +34,7 @@ Future<dynamic> getMethod({
 }) async {
   try {
     final url = Uri.parse(ApiConstant.baseurl + endpoint);
-    print("---------- Token ------- ${getAccessToken()}");
-    final requestHeaders = {
-      ...getSessionData(),
-      ...?headers,
-      "Authorization": "Bearer ${getAccessToken()}",
-    };
+    final requestHeaders = headers ?? getSessionData();
 
     log("--------- URL (GET) ---------- $url");
     log("--------- Headers ---------- $requestHeaders");
@@ -57,9 +52,92 @@ Future<dynamic> getMethod({
 }
 
 
+Future<dynamic> patchMethod({
+  required String endpoint,
+  Object? body,
+  Map<String, String>? headers,
+}) async {
+  try {
+    final url = Uri.parse(ApiConstant.baseurl + endpoint);
+    final requestHeaders = headers ?? getSessionData();
+
+    log("--------- URL (PATCH) ---------- $url");
+    log("---------- Request (PATCH) ---------- ${jsonEncode(body)}");
+
+    final response = await http.patch(
+      url,
+      headers: requestHeaders,
+      body: jsonEncode(body),
+    );
+
+    log("----------- PATCH Response ----------- ${response.body}");
+    return response;
+  } catch (e) {
+    log("PATCH ERROR $e");
+  }
+}
+
+
+Future<dynamic> putMethod({
+  required String endpoint,
+  Object? body,
+  Map<String, String>? headers,
+}) async {
+  try {
+    final url = Uri.parse(ApiConstant.baseurl + endpoint);
+    final requestHeaders = headers ?? getSessionData();
+
+    log("--------- URL (PUT) ---------- $url");
+    log("---------- Request (PUT) ---------- ${jsonEncode(body)}");
+
+    final response = await http.put(
+      url,
+      headers: requestHeaders,
+      body: jsonEncode(body),
+    );
+
+    log("----------- PUT Response ----------- ${response.body}");
+    return response;
+  } catch (e) {
+    log("PUT ERROR $e");
+  }
+}
+
+
+Future<dynamic> deleteMethod({
+  required String endpoint,
+  Map<String, String>? headers,
+  Object? body,
+}) async {
+  try {
+    final url = Uri.parse(ApiConstant.baseurl + endpoint);
+    final requestHeaders = headers ?? getSessionData();
+
+    log("--------- URL (DELETE) ---------- $url");
+    log("--------- Headers ---------- $requestHeaders");
+    log("---------- Request (DELETE) ---------- ${jsonEncode(body)}");
+
+    final response = await http.delete(
+      url,
+      headers: requestHeaders,
+      body: body != null ? jsonEncode(body) : null,
+    );
+
+    log("----------- DELETE Response ----------- ${response.body}");
+    return response;
+  } catch (e) {
+    log("DELETE ERROR $e");
+  }
+}
+
+
 Map<String, String> getSessionData() {
-  return {
-    "Content-Type": "application/json",
-    "Accept": "application/json",
-  };
+  Map<String, String> headers = {};
+  headers['Content-Type'] = "application/json";
+  headers['Accept'] = "application/json";
+  var token = getAccessToken();
+  if(token.isNotEmpty){
+    headers['Authorization'] = "Bearer ${getAccessToken()}";
+  }
+  return headers;
 }
