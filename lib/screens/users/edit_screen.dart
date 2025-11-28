@@ -104,6 +104,9 @@ class _EditScreenState extends State<EditScreen> {
                     label: AppLabels.first_name,
                     controller: firstnamecontroller,
                     textinputtype: TextInputType.name,
+                    onFieldSubmitted: (_) {
+                      FocusScope.of(context).requestFocus(lastnamefocusnode);
+                    },
                     validator: (value) {
                       return Cm.validate(value, AppLabels.first_name,firstnamefocusnode);
                     },
@@ -114,6 +117,9 @@ class _EditScreenState extends State<EditScreen> {
                     label: AppLabels.last_name,
                     controller: lastnamecontroller,
                     textinputtype: TextInputType.name,
+                    onFieldSubmitted: (_) {
+                      FocusScope.of(context).requestFocus(agefocusnode);
+                    },
                     validator: (value) {
                       return Cm.validate(value, AppLabels.last_name,lastnamefocusnode);
                     },
@@ -124,6 +130,9 @@ class _EditScreenState extends State<EditScreen> {
                     label: AppLabels.age,
                     controller: agecontroller,
                     textinputtype: TextInputType.number,
+                    onFieldSubmitted: (_) {
+                      FocusScope.of(context).requestFocus(genderfocusnode);
+                    },
                     validator: (value) {
                       return Cm.validate(value, AppLabels.age,agefocusnode);
                     },
@@ -134,6 +143,9 @@ class _EditScreenState extends State<EditScreen> {
                     label: AppLabels.gender,
                     controller: gendercontroller,
                     textinputtype: TextInputType.name,
+                    onFieldSubmitted: (_) {
+                      FocusScope.of(context).requestFocus(emailfocusnode);
+                    },
                     validator: (value) {
                       return Cm.validate(value, AppLabels.gender,genderfocusnode);
                     },

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:demo_users_app/extension.dart';
 import 'package:demo_users_app/http/my_app_http.dart';
 import 'package:demo_users_app/utils/api_constant.dart';
 import 'package:http/http.dart' as http ;
@@ -7,13 +8,13 @@ class ProductDatasource {
   Future<dynamic> getallproducts ({String? search, String? sortBy,String? category}) async{
     try{
       var buffer = StringBuffer(ApiConstant.products);
-      if(search != null && search.isNotEmpty){
+      if(search.isNotNullOrEmpty()){
          buffer.write("/search?q=$search");
       }
-      if(sortBy != null && sortBy.isNotEmpty){
+      if(sortBy.isNotNullOrEmpty()){
         buffer.write("?sortBy=title&order=$sortBy");
       }
-      if(category != null && category.isNotEmpty){
+      if(category.isNotNullOrEmpty()){
         buffer.write("/category/$category");
       }
       final response = await getMethod(

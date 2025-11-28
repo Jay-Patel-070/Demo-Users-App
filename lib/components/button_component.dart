@@ -5,7 +5,8 @@ class ButtonComponent extends StatelessWidget {
   final String buttontitle;
   final VoidCallback ontap;
   final bool? isloading;
-  const ButtonComponent({super.key,required this.ontap,required this.buttontitle,this.isloading});
+  final Color? bgcolor;
+  const ButtonComponent({super.key,required this.ontap,required this.buttontitle,this.isloading,this.bgcolor});
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +14,7 @@ class ButtonComponent extends StatelessWidget {
       ignoring: isloading ?? false,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.primarycolor,
+          backgroundColor: bgcolor ?? AppColors.primarycolor,
           padding: .symmetric(vertical:AppPadding.sm),
           minimumSize: Size(double.infinity,0),
           shape: RoundedRectangleBorder(

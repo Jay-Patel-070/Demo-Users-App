@@ -1,4 +1,3 @@
-import 'package:demo_users_app/main.dart';
 import 'package:demo_users_app/screens/product/product_screen.dart';
 import 'package:demo_users_app/screens/users/all_user_screen.dart';
 import 'package:demo_users_app/screens/users/settings_screen.dart';
@@ -41,7 +40,7 @@ class _BottomNavigationBarrState extends State<BottomNavigationBarr> {
           )
         ),
         child: BottomNavigationBar(
-            items:const <BottomNavigationBarItem>[
+            items:<BottomNavigationBarItem>[
               BottomNavigationBarItem(
                 icon: Icon(Icons.group_outlined),
                 label: AppLabels.users,
@@ -51,7 +50,7 @@ class _BottomNavigationBarrState extends State<BottomNavigationBarr> {
                 label: AppLabels.settings,
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.shopping_cart),
+                icon: Icon(Icons.inventory_2_outlined),
                 label: AppLabels.products,
               )
             ],
@@ -60,7 +59,6 @@ class _BottomNavigationBarrState extends State<BottomNavigationBarr> {
           backgroundColor: AppColors.whitecolor,
           unselectedItemColor: AppColors.greywithshade,
           selectedItemColor: AppColors.primarycolor,
-          iconSize: 30,
           type: BottomNavigationBarType.fixed,
           selectedFontSize: AppFontSizes.md,
           unselectedFontSize: AppFontSizes.md,

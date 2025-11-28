@@ -34,6 +34,24 @@ String getAccessToken() {
   return sharedprefshelper.getData(LocalStorageKeys.accessToken) ?? "";
 }
 
+void callNextScreen(BuildContext context, Widget nextScreen) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => nextScreen,),
+  );
+}
+
+Future callNextScreenWithResult(BuildContext context, Widget nextScreen) async {
+  var action = await Navigator.push(context, MaterialPageRoute(builder: (context) => nextScreen,));
+
+  return action;
+}
+
+void callNextScreenAndClearStack(BuildContext context, Widget nextScreen) {
+  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => nextScreen,),
+          (Route<dynamic> route) => false);
+}
+
 class Cm {
   static bool focusGiven = false;
   static String? validate(String? value,String fieldname,FocusNode focusnode){
@@ -95,6 +113,7 @@ class Cm {
           ),
           // margin: const EdgeInsets.only(top: , left: 10, right: 10),
           dismissDirection: DismissDirection.up,
+          duration: Duration(seconds: 2),
         ),
       );
   }

@@ -86,10 +86,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     title: AppLabels.profile,
                     icon: Icons.person_outline,
                     ontap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => UserProfileScreen()),
-                      );
+                      callNextScreen(context, UserProfileScreen());
                     },
                   ),
                   sb(20),
@@ -137,10 +134,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   onTapLogOut() {
     sharedprefshelper.clearAllData();
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => LoginScreen()),
-    );
+    callNextScreenAndClearStack(context, LoginScreen());
   }
 
   Widget tile({

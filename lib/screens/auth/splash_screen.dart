@@ -1,8 +1,9 @@
 import 'dart:developer';
 import 'package:demo_users_app/bottom_navigation_barr.dart';
 import 'package:demo_users_app/cm.dart';
+import 'package:demo_users_app/extension.dart';
 import 'package:demo_users_app/main.dart';
-import 'package:demo_users_app/screens/auth/login_screen.dart';
+import 'package:demo_users_app/screens/auth/onboarding_screen.dart';
 import 'package:demo_users_app/utils/utils.dart';
 import 'package:flutter/material.dart';
 
@@ -23,18 +24,12 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> navigateFromSplash() async {
     final String? token = getAccessToken();
     userData = getUserData();
-    Future.delayed(Duration(seconds: 2),() {
-      if (token != null && token.isNotEmpty) {
+    Future.delayed(Duration(seconds: 2), () {
+      if (token.isNotNullOrEmpty()) {
         log("---------- Token ---------- ${token}");
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => BottomNavigationBarr()),
-        );
+        callNextScreenAndClearStack(context, BottomNavigationBarr());
       } else {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => LoginScreen()),
-        );
+        callNextScreenAndClearStack(context, OnboardingScreen());
       }
     },);
   }
@@ -43,10 +38,10 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       backgroundColor: AppColors.primarycolor,
       body: Center(
-        child: Text(AppLabels.demo_users_app,style: TextStyle(
-          color: AppColors.whitecolor,
-          fontSize: AppFontSizes.display,
-          fontFamily: Appfonts.robotobold
+        child: Text(AppLabels.demo_users_app, style: TextStyle(
+            color: AppColors.whitecolor,
+            fontSize: AppFontSizes.display,
+            fontFamily: Appfonts.robotobold
         ),),
       ),
     );

@@ -56,7 +56,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             backgroundColor: Colors.white,
             appBar: PreferredSize(preferredSize: Size(double.infinity, 50), child: AppbarComponent(title: AppLabels.product_details,centertitle: true,)),
             body: state.apicallstate == ProductApiCallState.busy
-                ? Center(child: CircularProgressIndicator())
+                ? Center(child: CircularProgressIndicator(color: AppColors.primarycolor,))
                 : ListView(
                     padding: .symmetric(horizontal: 16),
                     children: [
@@ -89,7 +89,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             ),
                           ),
                           Text(
-                            "₹${state.productdetailsmodel?.price}",
+                            "\$${state.productdetailsmodel?.price}",
                             style: TextStyle(
                               fontSize: AppFontSizes.display,
                               fontFamily: Appfonts.robotobold,
@@ -98,7 +98,30 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           ),
                         ],
                       ),
-                      sb( 20),
+                      sb(10),
+                      SizedBox(
+                        height: 50,
+                        child: ListView.builder(
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: EdgeInsets.all(AppPadding.xs),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color:AppColors.greywithshade.withOpacity(0.2),
+                                  borderRadius: .circular(AppRadius.md),
+                                ),
+                                alignment: Alignment.center,
+                                padding: .all(AppPadding.md),
+                                child: Text(
+                                    state.productdetailsmodel?.tags?[index] ?? '',
+                                  ),
+                              ),
+                            );
+                          },
+                          itemCount: state.productdetailsmodel?.tags?.length,
+                          scrollDirection: Axis.horizontal,
+                        ),
+                      ),
                       expansionTileSection(
                         title: "Product Description",
                         content: Text(
@@ -204,7 +227,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             bottomSheet: Padding(
               padding: EdgeInsets.only(left: AppPadding.lg, right: AppPadding.lg, bottom: AppPadding.lg),
               child: ButtonComponent(ontap: () {
-
+                Navigator.pop(context,state.productdetailsmodel?.title);
               }, buttontitle: AppLabels.add_to_cart),
             ),
           );

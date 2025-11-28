@@ -5,11 +5,11 @@ extension StringCasingExtension on String {
   ///
   /// Example:
   /// ```dart
-  /// print("jay".capitalizeFirst()); // Output: Jay
+  /// print("jay".capitalize()); // Output: Jay
   /// ```
   ///
   /// Handles empty string safely.
-  String capitalizeFirst() {
+  String capitalize() {
     if (isEmpty) return this;
     return '${this[0].toUpperCase()}${substring(1)}';
   }
@@ -22,13 +22,13 @@ extension OnTapWidgetExtension on Widget {
   /// Example:
   /// ```dart
   /// Text("Click Me")
-  ///     .onTap(() {
+  ///     .onTapEvent(() {
   ///       print("Widget clicked");
   ///     });
   /// ```
   ///
   /// Useful for making non-button widgets clickable.
-  Widget onTap(VoidCallback onTap) {
+  Widget onTapEvent(GestureTapCallback onTap) {
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
@@ -50,5 +50,33 @@ extension PaddingExtension on Widget {
       padding: padding ?? EdgeInsets.all(all ?? 0),
       child: this,
     );
+  }
+}
+
+
+extension isNullandEmptyExtension on String? {
+  /// Checks if the string is null or empty.
+  ///
+  /// Example:
+  /// ```dart
+  /// String? name;
+  /// print(name.isNullOrEmpty()); // Output: true
+  /// ```
+  bool isNullOrEmpty() {
+    return this == null || this!.isEmpty;
+  }
+}
+
+
+extension isNotNullandEmptyExtension on String? {
+  /// Checks if the string is not null and not empty.
+  ///
+  /// Example:
+  /// ```dart
+  /// String? name = "John";
+  /// print(name.isNotNullOrEmpty()); // Output: true
+  /// ```
+  bool isNotNullOrEmpty() {
+    return this != null && this!.isNotEmpty;
   }
 }

@@ -12,7 +12,7 @@ Future<dynamic> postMethod({
   Map<String, String>? headers,
 }) async {
   try {
-    final url = Uri.parse(ApiConstant.baseurl+endpoint);
+    final url = Uri.parse(ApiConstant.baseurl + endpoint);
     final requestHeaders = headers ?? getSessionData();
     log("--------- URL ---------- $url");
     log("---------- Request ----------${jsonEncode(body)}");
@@ -39,10 +39,7 @@ Future<dynamic> getMethod({
     log("--------- URL (GET) ---------- $url");
     log("--------- Headers ---------- $requestHeaders");
 
-    final response = await http.get(
-      url,
-      headers: requestHeaders,
-    );
+    final response = await http.get(url, headers: requestHeaders);
 
     log("----------- GET Response ----------- ${response.body}");
     return response;
@@ -50,7 +47,6 @@ Future<dynamic> getMethod({
     log("GET ERROR $e");
   }
 }
-
 
 Future<dynamic> patchMethod({
   required String endpoint,
@@ -77,7 +73,6 @@ Future<dynamic> patchMethod({
   }
 }
 
-
 Future<dynamic> putMethod({
   required String endpoint,
   Object? body,
@@ -102,7 +97,6 @@ Future<dynamic> putMethod({
     log("PUT ERROR $e");
   }
 }
-
 
 Future<dynamic> deleteMethod({
   required String endpoint,
@@ -130,13 +124,12 @@ Future<dynamic> deleteMethod({
   }
 }
 
-
 Map<String, String> getSessionData() {
   Map<String, String> headers = {};
   headers['Content-Type'] = "application/json";
   headers['Accept'] = "application/json";
   var token = getAccessToken();
-  if(token.isNotEmpty){
+  if (token.isNotEmpty) {
     headers['Authorization'] = "Bearer ${getAccessToken()}";
   }
   return headers;

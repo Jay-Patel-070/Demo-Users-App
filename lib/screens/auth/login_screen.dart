@@ -60,8 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
       listener: (context, state) async{
         if (state.apicallstate == LoginApiCallState.success) {
          await sharedprefshelper.saveData(LocalStorageKeys.accessToken, state.loginresponsemodel?.accessToken);
-         Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => BottomNavigationBarr()));
+         callNextScreenAndClearStack(context, BottomNavigationBarr());
         }else if (state.apicallstate == LoginApiCallState.failure){
           Cm.showSnackBar(context, message: state.error.toString());
         }
@@ -95,6 +94,9 @@ class _LoginScreenState extends State<LoginScreen> {
                               hinttext: AppStrings.enter_your_username,
                               prefixicon: Icon(Icons.email_outlined),
                               label: AppLabels.user_name,
+                              onFieldSubmitted: (_) {
+                                FocusScope.of(context).requestFocus(passwordfocusnode);
+                              },
                               validator: (value) {
                                 return Cm.validate(value, AppLabels.user_name,usernamefocusnode);
                               },
@@ -172,10 +174,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   onpressNewToOurApp() {
     FocusScope.of(context).unfocus();
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => SignupScreen()),
-    );
+    callNextScreen(context, SignupScreen());
   }
 
   onpressLogin() {

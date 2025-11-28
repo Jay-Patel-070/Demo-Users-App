@@ -4,6 +4,7 @@ import 'package:demo_users_app/components/appbar_component.dart';
 import 'package:demo_users_app/components/button_component.dart';
 import 'package:demo_users_app/components/profile_component.dart';
 import 'package:demo_users_app/components/textfield_component.dart';
+import 'package:demo_users_app/extension.dart';
 import 'package:demo_users_app/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -199,24 +200,21 @@ class _SignupScreenState extends State<SignupScreen> {
   }) {
     return Expanded(
       flex: 1,
-      child: GestureDetector(
-        onTap: ontap,
-        child: AnimatedContainer(
-          duration: Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-          child: Text(
-            label,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontFamily: Appfonts.robotomedium,
-              fontSize: AppFontSizes.xl,
-              color: labelcolor,
-            ),
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+        child: Text(
+          label,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontFamily: Appfonts.robotomedium,
+            fontSize: AppFontSizes.xl,
+            color: labelcolor,
           ),
-          padding: .symmetric(vertical: AppPadding.sm),
-          decoration: BoxDecoration(borderRadius: .circular(AppRadius.md), color: color),
         ),
-      ),
+        padding: .symmetric(vertical: AppPadding.sm),
+        decoration: BoxDecoration(borderRadius: .circular(AppRadius.md), color: color),
+      ).onTapEvent(ontap,),
     );
   }
 

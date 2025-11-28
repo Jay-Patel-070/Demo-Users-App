@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 class TextfieldComponent extends StatelessWidget {
   final VoidCallback? ontap;
   final VoidCallback? suffixicontap;
+  final String? Function(String?)? onFieldSubmitted;
   final String? Function(String?)? validator;
   final TextEditingController? controller;
   final String? hinttext;
@@ -17,6 +18,7 @@ class TextfieldComponent extends StatelessWidget {
   TextfieldComponent({
     this.ontap,
     this.controller,
+    this.onFieldSubmitted,
     this.validator,
     this.hinttext,
     this.prefixicon,
@@ -68,6 +70,7 @@ class TextfieldComponent extends StatelessWidget {
           cursorColor: AppColors.primarycolor,
           keyboardType: textinputtype,
           validator: validator,
+          onFieldSubmitted: onFieldSubmitted,
         ),
       ],
     );

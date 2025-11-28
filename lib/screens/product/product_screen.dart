@@ -8,6 +8,7 @@ import 'package:demo_users_app/screens/product/data/product_datarepository.dart'
 import 'package:demo_users_app/screens/product/data/product_datasource.dart';
 import 'package:demo_users_app/screens/product/model/product_model.dart';
 import 'package:demo_users_app/screens/product/product_detail_screen.dart';
+import 'package:demo_users_app/screens/product/product_item_card.dart';
 import 'package:demo_users_app/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,7 +22,8 @@ class ProductScreen extends StatefulWidget {
   State<ProductScreen> createState() => _ProductScreenState();
 }
 
-class _ProductScreenState extends State<ProductScreen> {
+class _ProductScreenState extends State<ProductScreen>
+    with SingleTickerProviderStateMixin {
   final ProductBloc productbloc = ProductBloc(
     ProductDatarepository(ProductDatasource()),
   );
@@ -31,26 +33,70 @@ class _ProductScreenState extends State<ProductScreen> {
   String? isselectedsort;
   String? iscategoryselected;
   List? productcategorylist;
+  final ScrollController scrollController = ScrollController();
+  final ScrollController sortlistscrollController = ScrollController();
+  ValueNotifier<int> scrollNotifier = ValueNotifier(-1);
+  late TabController _tabController;
 
   @override
   void initState() {
     // TODO: implement initState
+    _tabController = TabController(length: 2, vsync: this);
     productbloc.add(FetchProductCategoryListEvent());
     productbloc.add(FetchAllProductsEvent());
+    scrollController.addListener(scrollPosition);
     super.initState();
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  void scrollDown() {
+    final double goDown = scrollController.position.maxScrollExtent;
+    scrollController.animateTo(
+      goDown,
+      duration: Duration(seconds: 1),
+      curve: Curves.easeInCirc,
+    );
+  }
+
+  void scrollUp() {
+    final double goUp = scrollController.position.minScrollExtent;
+    scrollController.animateTo(
+      goUp,
+      duration: Duration(seconds: 1),
+      curve: Curves.easeInCirc,
+    );
+  }
+
+  void scrollPosition() {
+    final position = scrollController.position.pixels;
+    final min = scrollController.position.minScrollExtent;
+    final max = scrollController.position.maxScrollExtent;
+    double mid = max / 2;
+    if (position == min || position == max) {
+      scrollNotifier.value = -1;
+    } else if (position < mid) {
+      scrollNotifier.value = 0;
+    } else if (position > mid) {
+      scrollNotifier.value = 1;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    print('rebuild');
     return BlocListener<ProductBloc, ProductState>(
       bloc: productbloc,
       listener: (context, state) {
         if (state.apicallstate == ProductApiCallState.success) {
           productmodel = state.productmodel;
           productcategorylist = state.productcategorylist;
-          setState(() {
-
-          });
+          setState(() {});
         }
         if (state.apicallstate == ProductApiCallState.failure) {
           Cm.showSnackBar(context, message: state.error.toString());
@@ -59,7 +105,13 @@ class _ProductScreenState extends State<ProductScreen> {
       child: Scaffold(
         appBar: PreferredSize(
           preferredSize: Size(double.infinity, 50),
-          child: AppbarComponent(title: AppLabels.products, centertitle: true),
+          child: AppbarComponent(
+            title: AppLabels.products,
+            centertitle: true,
+            actions: [
+              IconButton(onPressed: onReferesh, icon: Icon(Icons.refresh)),
+            ],
+          ),
         ),
         body: SafeArea(
           child: Column(
@@ -75,29 +127,41 @@ class _ProductScreenState extends State<ProductScreen> {
                   onChanged: onChangedSearchBar,
                   onClear: onClearSearchBar,
                 ),
-              ).withPadding(
-                padding: .symmetric(horizontal: AppPadding.lg)
-              ),
+              ).withPadding(padding: .symmetric(horizontal: AppPadding.lg)),
               sb(10),
               SizedBox(
                 height: 50,
                 child: ListView(
                   scrollDirection: Axis.horizontal,
                   physics: BouncingScrollPhysics(),
+                  controller: sortlistscrollController,
                   children: [
                     Padding(
                       padding: EdgeInsets.all(AppPadding.xs),
                       child: Container(
                         alignment: Alignment.center,
                         padding: .all(AppPadding.xs),
+                        decoration: BoxDecoration(
+                          color: AppColors.greywithshade.withOpacity(0.2),
+                          borderRadius: .circular(AppRadius.md),
+                        ),
                         child: PopupMenuButton<String>(
                           icon: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Icon(Icons.swap_vert,size: 18,color: isselectedsort == '' || isselectedsort == null ? AppColors.blackcolor : AppColors.primarycolor),
+                              Icon(
+                                Icons.swap_vert,
+                                size: 18,
+                                color:
+                                    isselectedsort == '' ||
+                                        isselectedsort == null
+                                    ? AppColors.blackcolor
+                                    : AppColors.primarycolor,
+                              ),
                               sbw(5),
-                              if (isselectedsort == null || isselectedsort == '')
-                              Text('sort'),
+                              if (isselectedsort == null ||
+                                  isselectedsort == '')
+                                Text('sort'),
                               if (isselectedsort == "asc" ||
                                   isselectedsort == 'desc')
                                 Text(
@@ -105,7 +169,9 @@ class _ProductScreenState extends State<ProductScreen> {
                                       ? 'A-Z'
                                       : 'Z-A',
                                   style: TextStyle(
-                                     color: isselectedsort == '' ? AppColors.blackcolor : AppColors.primarycolor
+                                    color: isselectedsort == ''
+                                        ? AppColors.blackcolor
+                                        : AppColors.primarycolor,
                                   ),
                                 ),
                             ],
@@ -115,6 +181,9 @@ class _ProductScreenState extends State<ProductScreen> {
                               <PopupMenuEntry<String>>[
                                 PopupMenuItem<String>(
                                   enabled: false,
+                                  padding: .symmetric(
+                                    horizontal: AppPadding.md,
+                                  ),
                                   child: Text(
                                     'Sort By',
                                     style: TextStyle(
@@ -124,12 +193,12 @@ class _ProductScreenState extends State<ProductScreen> {
                                     ),
                                     textAlign: TextAlign.center,
                                   ),
-                                  padding: .symmetric(
-                                    horizontal: AppPadding.md,
-                                  ),
                                 ),
                                 PopupMenuItem<String>(
                                   value: 'asc',
+                                  padding: .symmetric(
+                                    horizontal: AppPadding.md,
+                                  ),
                                   child: Text(
                                     'A-Z Sort',
                                     style: TextStyle(
@@ -141,12 +210,12 @@ class _ProductScreenState extends State<ProductScreen> {
                                     ),
                                     textAlign: TextAlign.center,
                                   ),
-                                  padding: .symmetric(
-                                    horizontal: AppPadding.md,
-                                  ),
                                 ),
                                 PopupMenuItem<String>(
                                   value: 'desc',
+                                  padding: .symmetric(
+                                    horizontal: AppPadding.md,
+                                  ),
                                   child: Text(
                                     'Z-A Sort',
                                     style: TextStyle(
@@ -158,23 +227,14 @@ class _ProductScreenState extends State<ProductScreen> {
                                     ),
                                     textAlign: TextAlign.center,
                                   ),
-                                  padding: .symmetric(
-                                    horizontal: AppPadding.md,
-                                  ),
                                 ),
                               ],
                           padding: .symmetric(horizontal: AppPadding.md),
                           color: AppColors.whitecolor,
                         ),
-                        decoration: BoxDecoration(
-                          color: AppColors.greywithshade.withOpacity(0.2),
-                          borderRadius: .circular(AppRadius.md),
-                        ),
                       ),
                     ),
-                    ...List.generate(productcategorylist?.length ?? 0, (
-                      index,
-                    ) {
+                    ...List.generate(productcategorylist?.length ?? 0, (index) {
                       return Padding(
                         padding: EdgeInsets.all(AppPadding.xs),
                         child: Container(
@@ -191,7 +251,8 @@ class _ProductScreenState extends State<ProductScreen> {
                           child: Row(
                             children: [
                               Text(
-                                '${productcategorylist?[index]}'.capitalizeFirst(),
+                                '${productcategorylist?[index]}'
+                                    .capitalize(),
                                 style: TextStyle(
                                   color:
                                       iscategoryselected ==
@@ -211,58 +272,162 @@ class _ProductScreenState extends State<ProductScreen> {
                             ],
                           ),
                         ),
-                      ).onTap(() => onTapCategory(index));
+                      ).onTapEvent(() => onTapCategory(index));
                     }),
                   ],
                 ),
               ),
-              sb(20),
+              SizedBox(
+                height: 48,
+                child: TabBar(
+                  controller: _tabController,
+                  indicatorColor: AppColors.primarycolor,
+                  labelColor: AppColors.primarycolor,
+                  unselectedLabelColor: AppColors.greywithshade,
+                  tabs: [
+                    Tab(
+                      child: Text(
+                        'Grid',
+                        style: TextStyle(
+                          fontSize: AppFontSizes.lg,
+                          fontFamily: Appfonts.robotobold,
+                        ),
+                      ),
+                    ),
+                    Tab(
+                      child: Text(
+                        'List',
+                        style: TextStyle(
+                          fontSize: AppFontSizes.lg,
+                          fontFamily: Appfonts.robotobold,
+                        ),
+                      ),
+                    ),
+                  ],
+                  dividerColor: AppColors.greywithshade.withOpacity(0.2),
+                ),
+              ),
+              sb(10),
               BlocBuilder<ProductBloc, ProductState>(
                 bloc: productbloc,
                 builder: (context, state) {
                   if (state.apicallstate == ProductApiCallState.busy) {
                     return Expanded(
-                      child: Center(child: CircularProgressIndicator(color: AppColors.primarycolor)),
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          color: AppColors.primarycolor,
+                        ),
+                      ),
                     );
                   }
-                  if (productmodel != null &&
-                      productmodel?.products != null) {
+                  if (productmodel != null && productmodel?.products != null) {
                     final list = productmodel?.products;
                     return productmodel?.products?.isEmpty == true
                         ? Expanded(
                             child: Center(child: Text('No Products Found')),
                           )
                         : Expanded(
-                            flex: 10,
-                            child: RefreshIndicator(
-                              color: AppColors.primarycolor,
-                              backgroundColor: AppColors.whitecolor,
-                              onRefresh: onReferesh,
-                              child: GridView.builder(
-                                gridDelegate:
-                                    SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 2,
-                                      childAspectRatio: 0.65,
-                                      mainAxisSpacing: 15,
-                                      crossAxisSpacing: 15,
-                                    ),
-                                itemCount: list?.length,
-                                physics: BouncingScrollPhysics(),
-                                itemBuilder: (context, index) {
-                                  final fields = list?[index];
-                                  return productItemCard(
-                                    imageUrl: fields?.thumbnail,
-                                    title: fields?.title,
-                                    price: "\$${fields?.price}",
-                                    ontap: () =>
-                                        onTapProductItemCard(fields?.id),
-                                  );
-                                },
-                              ),
-                            ).withPadding(
-                                padding: .symmetric(horizontal: AppPadding.lg)
+                            // flex: 10,
+                            child: TabBarView(
+                              controller: _tabController,
+                              children: [
+                                RefreshIndicator(
+                                  color: AppColors.primarycolor,
+                                  backgroundColor: AppColors.whitecolor,
+                                  onRefresh: onReferesh,
+                                  child:
+                                      GridView.builder(
+                                        controller: scrollController,
+                                        gridDelegate:
+                                            SliverGridDelegateWithFixedCrossAxisCount(
+                                              crossAxisCount: 2,
+                                              childAspectRatio: 0.65,
+                                              mainAxisSpacing: 15,
+                                              crossAxisSpacing: 15,
+                                            ),
+                                        itemCount: list?.length,
+                                        physics: BouncingScrollPhysics(),
+                                        itemBuilder: (context, index) {
+                                          final fields = list?[index];
+                                          return productItemCard(
+                                            imageUrl: fields?.thumbnail,
+                                            title: fields?.title,
+                                            price: "\$${fields?.price}",
+                                            ontap: () => onTapProductItemCard(
+                                              fields?.id,
+                                            ),
+                                          );
+                                        },
+                                      ).withPadding(
+                                        padding: .symmetric(
+                                          horizontal: AppPadding.lg,
+                                        ),
+                                      ),
+                                ),
+                                RefreshIndicator(
+                                  color: AppColors.primarycolor,
+                                  backgroundColor: AppColors.whitecolor,
+                                  onRefresh: onReferesh,
+                                  child: ListView.builder(
+                                    controller: scrollController,
+                                    itemCount: list?.length,
+                                    itemBuilder: (context, index) {
+                                      final fields = list?[index];
+                                      return listItemCard(
+                                        imageUrl: fields?.thumbnail,
+                                        title: fields?.title,
+                                        price: "\$${fields?.price}",
+                                        ontap: () =>
+                                            onTapProductItemCard(fields?.id),
+                                      ).withPadding(
+                                        padding: .only(
+                                          bottom: 12,
+                                          left: AppPadding.lg,
+                                          right: AppPadding.lg,
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ],
                             ),
                           );
+                    // productmodel?.products?.isEmpty == true
+                    //   ? Expanded(
+                    //       child: Center(child: Text('No Products Found')),
+                    //     )
+                    //   : Expanded(
+                    //       flex: 10,
+                    //       child: RefreshIndicator(
+                    //         color: AppColors.primarycolor,
+                    //         backgroundColor: AppColors.whitecolor,
+                    //         onRefresh: onReferesh,
+                    //         child: GridView.builder(
+                    //           controller: scrollController,
+                    //           gridDelegate:
+                    //               SliverGridDelegateWithFixedCrossAxisCount(
+                    //                 crossAxisCount: 2,
+                    //                 childAspectRatio: 0.65,
+                    //                 mainAxisSpacing: 15,
+                    //                 crossAxisSpacing: 15,
+                    //               ),
+                    //           itemCount: list?.length,
+                    //           physics: BouncingScrollPhysics(),
+                    //           itemBuilder: (context, index) {
+                    //             final fields = list?[index];
+                    //             return productItemCard(
+                    //               imageUrl: fields?.thumbnail,
+                    //               title: fields?.title,
+                    //               price: "\$${fields?.price}",
+                    //               ontap: () =>
+                    //                   onTapProductItemCard(fields?.id),
+                    //             );
+                    //           },
+                    //         ),
+                    //       ).withPadding(
+                    //           padding: .symmetric(horizontal: AppPadding.lg)
+                    //       ),
+                    //     );
                   }
                   return Container();
                 },
@@ -270,74 +435,88 @@ class _ProductScreenState extends State<ProductScreen> {
             ],
           ),
         ),
+        floatingActionButton: ValueListenableBuilder(
+          valueListenable: scrollNotifier,
+          builder: (context, value, child) {
+            IconData icon = Icons.arrow_downward_sharp;
+            if (value == 0) {
+              icon = Icons.arrow_downward_sharp;
+            } else if (value == 1) {
+              icon = Icons.arrow_upward_sharp;
+            }
+            return AnimatedOpacity(
+              opacity: value == -1 ? 0 : 1,
+              duration: Duration(milliseconds: 300),
+              child: FloatingActionButton.small(
+                onPressed: () {
+                  if (value == 0) {
+                    scrollDown();
+                  } else if (value == 1) {
+                    scrollUp();
+                  }
+                },
+                child: Icon(icon, color: AppColors.whitecolor),
+                backgroundColor: AppColors.primarycolor,
+              ),
+            );
+          },
+        ),
       ),
     );
   }
 
-  Widget productItemCard({
+  Widget listItemCard({
     String? imageUrl,
     String? title,
     String? price,
     VoidCallback? ontap,
   }) {
-    return GestureDetector(
-      onTap: ontap,
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(
-            width: 1,
-            color: AppColors.greywithshade.withOpacity(0.2),
-          ),
-          color: AppColors.whitecolor,
-          borderRadius: .circular(AppRadius.md),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            AspectRatio(
-              aspectRatio: 2 / 2,
-              child: ClipRRect(
-                borderRadius: BorderRadius.vertical(
-                  top: Radius.circular(AppRadius.xl),
-                ),
-                child: Image.network(
-                  imageUrl ?? '',
-                  width: double.infinity,
-                  fit: BoxFit.contain,
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.all(AppPadding.sm),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    title ?? '',
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: AppFontSizes.lg,
-                      fontFamily: Appfonts.robotomedium,
-                    ),
-                  ),
-                  SizedBox(height: 4),
-                  Text(
-                    price ?? '',
-                    style: TextStyle(
-                      fontSize: AppFontSizes.lg,
-                      fontFamily: Appfonts.robotomedium,
-                      color: AppColors.primarycolor
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: .circular(AppRadius.md),
+        color: AppColors.whitecolor,
+        border: Border.all(color: AppColors.greywithshade.withOpacity(0.2)),
       ),
-    );
+      padding: EdgeInsets.all(AppPadding.md),
+      child: Row(
+        children: [
+          SizedBox(
+            height: 80,
+            width: 80,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(AppRadius.lg),
+              child: Image.network(imageUrl ?? '', fit: BoxFit.contain),
+            ),
+          ),
+          sbw(12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title ?? '',
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontFamily: Appfonts.robotomedium,
+                    fontSize: AppFontSizes.lg,
+                  ),
+                ),
+                sb(6),
+                Text(
+                  price ?? '',
+                  style: TextStyle(
+                    color: AppColors.primarycolor,
+                    fontSize: AppFontSizes.lg,
+                    fontFamily: Appfonts.robotomedium,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    ).onTapEvent(ontap!,);
   }
 
   onChangedSearchBar(String value) {
@@ -375,9 +554,7 @@ class _ProductScreenState extends State<ProductScreen> {
       // remove selection
       iscategoryselected = null;
       productbloc.add(FetchAllProductsEvent());
-      setState(() {
-
-      });
+      setState(() {});
     } else {
       // apply new selection
       searchfocusnode.unfocus();
@@ -396,15 +573,29 @@ class _ProductScreenState extends State<ProductScreen> {
     searchproducts.clear();
     isselectedsort = '';
     iscategoryselected = null;
+    productbloc.add(FetchProductCategoryListEvent());
     productbloc.add(FetchAllProductsEvent());
+    sortlistscrollController.animateTo(
+      0,
+      curve: Curves.linear,
+      duration: Duration(milliseconds: 400),
+    );
     setState(() {});
   }
 
   onTapProductItemCard(int? id) {
-    FocusScope.of(context).unfocus();
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => ProductDetailScreen(id: id)),
-    );
+    searchfocusnode.unfocus();
+    callNextScreenWithResult(context, ProductDetailScreen(id: id)).then((
+      value,
+    ) {
+      if (value != null) {
+        Cm.showSnackBar(
+          context,
+          message: '$value Added to cart',
+          bg: AppColors.greencolor,
+        );
+        productbloc.add(FetchAllProductsEvent());
+      }
+    });
   }
 }

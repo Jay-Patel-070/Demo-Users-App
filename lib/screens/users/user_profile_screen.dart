@@ -23,7 +23,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           title: AppLabels.user_details,
           actions: [
             TextButton(onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => EditScreen(),));
+              callNextScreen(context, EditScreen());
             }, child: Text(AppLabels.edit,style: TextStyle(color: AppColors.primarycolor,fontSize: AppFontSizes.xl,fontFamily: Appfonts.robotobold)))
           ],
           ),
