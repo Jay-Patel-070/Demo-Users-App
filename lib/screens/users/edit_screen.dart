@@ -77,9 +77,12 @@ class _EditScreenState extends State<EditScreen> {
       bloc: usersBloc,
       listener: (context, state) {
         if (state.apicallstate == UsersApiCallState.success) {
-          sharedprefshelper.saveData(LocalStorageKeys.userData, jsonEncode(state.userresponse?.toJson()));
+          sharedprefshelper.saveData(
+            LocalStorageKeys.userData,
+            jsonEncode(state.userresponse?.toJson()),
+          );
           userData = state.userresponse;
-          Navigator.pop(context);
+          Navigator.pop(context, true);
         }
         if (state.apicallstate == UsersApiCallState.failure) {
           Cm.showSnackBar(context, message: state.error.toString());
@@ -91,7 +94,10 @@ class _EditScreenState extends State<EditScreen> {
           return Scaffold(
             appBar: PreferredSize(
               preferredSize: Size(double.infinity, 50),
-              child: AppbarComponent(title: AppLabels.edit_profile, centertitle: true),
+              child: AppbarComponent(
+                title: AppLabels.edit_profile,
+                centertitle: true,
+              ),
             ),
             body: Form(
               key: _formkey,
@@ -108,7 +114,11 @@ class _EditScreenState extends State<EditScreen> {
                       FocusScope.of(context).requestFocus(lastnamefocusnode);
                     },
                     validator: (value) {
-                      return Cm.validate(value, AppLabels.first_name,firstnamefocusnode);
+                      return Cm.validate(
+                        value,
+                        AppLabels.first_name,
+                        firstnamefocusnode,
+                      );
                     },
                   ),
                   sb(20),
@@ -121,7 +131,11 @@ class _EditScreenState extends State<EditScreen> {
                       FocusScope.of(context).requestFocus(agefocusnode);
                     },
                     validator: (value) {
-                      return Cm.validate(value, AppLabels.last_name,lastnamefocusnode);
+                      return Cm.validate(
+                        value,
+                        AppLabels.last_name,
+                        lastnamefocusnode,
+                      );
                     },
                   ),
                   sb(20),
@@ -134,7 +148,7 @@ class _EditScreenState extends State<EditScreen> {
                       FocusScope.of(context).requestFocus(genderfocusnode);
                     },
                     validator: (value) {
-                      return Cm.validate(value, AppLabels.age,agefocusnode);
+                      return Cm.validate(value, AppLabels.age, agefocusnode);
                     },
                   ),
                   sb(20),
@@ -147,7 +161,11 @@ class _EditScreenState extends State<EditScreen> {
                       FocusScope.of(context).requestFocus(emailfocusnode);
                     },
                     validator: (value) {
-                      return Cm.validate(value, AppLabels.gender,genderfocusnode);
+                      return Cm.validate(
+                        value,
+                        AppLabels.gender,
+                        genderfocusnode,
+                      );
                     },
                   ),
                   sb(20),
@@ -157,7 +175,11 @@ class _EditScreenState extends State<EditScreen> {
                     controller: emailcontroller,
                     textinputtype: TextInputType.emailAddress,
                     validator: (value) {
-                      return Cm.validate(value, AppLabels.email,emailfocusnode);
+                      return Cm.validate(
+                        value,
+                        AppLabels.email,
+                        emailfocusnode,
+                      );
                     },
                   ),
                   sb(200),
@@ -165,8 +187,18 @@ class _EditScreenState extends State<EditScreen> {
               ),
             ),
             bottomSheet: Padding(
-              padding: EdgeInsets.only(left: AppPadding.lg, right: AppPadding.lg, bottom: AppPadding.lg),
-              child: ButtonComponent(ontap: onTapSaveChanges, buttontitle: AppLabels.save_changes,isloading: state.apicallstate == UsersApiCallState.busy ? true : false,),
+              padding: EdgeInsets.only(
+                left: AppPadding.lg,
+                right: AppPadding.lg,
+                bottom: AppPadding.lg,
+              ),
+              child: ButtonComponent(
+                ontap: onTapSaveChanges,
+                buttontitle: AppLabels.save_changes,
+                isloading: state.apicallstate == UsersApiCallState.busy
+                    ? true
+                    : false,
+              ),
             ),
           );
         },
@@ -178,13 +210,26 @@ class _EditScreenState extends State<EditScreen> {
     FocusScope.of(context).unfocus();
     Cm.focusGiven = false;
     if (_formkey.currentState?.validate() == true) {
-      usersBloc.add(UpdateAuthUserEvent(params: {
-        "firstName": firstnamecontroller.text.trim(),
-        "lastName": lastnamecontroller.text.trim(),
-        "age": agecontroller.text.trim(),
-        "gender": gendercontroller.text.trim(),
-        "email": emailcontroller.text.trim(),
-      }, id: userData?.id));
+      if (userData?.firstName == firstnamecontroller.text.trim() &&
+          userData?.lastName == lastnamecontroller.text.trim() &&
+          userData?.age.toString() == agecontroller.text.trim() &&
+          userData?.email == emailcontroller.text.trim() &&
+          userData?.gender == gendercontroller.text.trim()) {
+        Navigator.pop(context);
+      } else {
+        usersBloc.add(
+          UpdateAuthUserEvent(
+            params: {
+              "firstName": firstnamecontroller.text.trim(),
+              "lastName": lastnamecontroller.text.trim(),
+              "age": agecontroller.text.trim(),
+              "gender": gendercontroller.text.trim(),
+              "email": emailcontroller.text.trim(),
+            },
+            id: userData?.id,
+          ),
+        );
+      }
     }
   }
 }

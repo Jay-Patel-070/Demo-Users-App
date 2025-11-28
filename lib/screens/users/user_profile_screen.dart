@@ -22,11 +22,36 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           centertitle: true,
           title: AppLabels.user_details,
           actions: [
-            TextButton(onPressed: () {
-              callNextScreen(context, EditScreen());
-            }, child: Text(AppLabels.edit,style: TextStyle(color: AppColors.primarycolor,fontSize: AppFontSizes.xl,fontFamily: Appfonts.robotobold)))
+            TextButton(
+              onPressed: () {
+                callNextScreenWithResult(context, EditScreen()).then((value) {
+                  if (value == true) {
+                    Cm.showSnackBar(
+                      context,
+                      message: 'User details updated successfully',
+                      bg: AppColors.greencolor,
+                    );
+                    setState(() {});
+                  } else {
+                    Cm.showSnackBar(
+                      context,
+                      message: 'No changes made to user details',
+                      bg: AppColors.greycolor,
+                    );
+                  }
+                });
+              },
+              child: Text(
+                AppLabels.edit,
+                style: TextStyle(
+                  color: AppColors.primarycolor,
+                  fontSize: AppFontSizes.xl,
+                  fontFamily: Appfonts.robotobold,
+                ),
+              ),
+            ),
           ],
-          ),
+        ),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -48,15 +73,15 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         '${userData?.firstName} ${userData?.lastName}',
                         style: TextStyle(
                           fontSize: AppFontSizes.xl,
-                          fontFamily: Appfonts.robotobold
+                          fontFamily: Appfonts.robotobold,
                         ),
                       ),
                       Text(
-                          '${userData?.email}',
+                        '${userData?.email}',
                         style: TextStyle(
                           color: AppColors.greycolor,
                           fontSize: AppFontSizes.lg,
-                          fontFamily: Appfonts.roboto
+                          fontFamily: Appfonts.roboto,
                         ),
                       ),
                     ],
@@ -65,13 +90,29 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 sb(20),
                 Column(
                   children: [
-                    UserDetailTile(icon: Icons.person_outline, title: AppLabels.full_name, subtitle: '${userData?.firstName} ${userData?.lastName}'),
+                    UserDetailTile(
+                      icon: Icons.person_outline,
+                      title: AppLabels.full_name,
+                      subtitle: '${userData?.firstName} ${userData?.lastName}',
+                    ),
                     sb(20),
-                    UserDetailTile(icon: Icons.tag, title: AppLabels.user_name, subtitle: '${userData?.username}'),
+                    UserDetailTile(
+                      icon: Icons.tag,
+                      title: AppLabels.user_name,
+                      subtitle: '${userData?.username}',
+                    ),
                     sb(20),
-                    UserDetailTile(icon: Icons.wc_outlined, title: AppLabels.gender, subtitle: '${userData?.gender}'),
+                    UserDetailTile(
+                      icon: Icons.wc_outlined,
+                      title: AppLabels.gender,
+                      subtitle: '${userData?.gender}',
+                    ),
                     sb(20),
-                    UserDetailTile(icon: Icons.email_outlined, title: AppLabels.email, subtitle: '${userData?.email}'),
+                    UserDetailTile(
+                      icon: Icons.email_outlined,
+                      title: AppLabels.email,
+                      subtitle: '${userData?.email}',
+                    ),
                   ],
                 ),
               ],
@@ -81,30 +122,34 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       ),
     );
   }
+
   Widget UserDetailTile({
     required IconData icon,
     required String title,
     required String subtitle,
-  }){
+  }) {
     return ListTile(
-      leading: Icon(
-        icon,color: AppColors.primarycolor,
-      ),
+      leading: Icon(icon, color: AppColors.primarycolor),
       title: Padding(
         padding: EdgeInsets.symmetric(horizontal: AppPadding.lg),
-        child: Text(title,style: TextStyle(
-          fontFamily: Appfonts.roboto,
-          fontSize: AppFontSizes.md,
-          color: AppColors.greywithshade
-        ),
+        child: Text(
+          title,
+          style: TextStyle(
+            fontFamily: Appfonts.roboto,
+            fontSize: AppFontSizes.md,
+            color: AppColors.greywithshade,
+          ),
         ),
       ),
       subtitle: Padding(
         padding: const EdgeInsets.symmetric(horizontal: AppPadding.lg),
-        child: Text(subtitle,style: TextStyle(
+        child: Text(
+          subtitle,
+          style: TextStyle(
             fontFamily: Appfonts.roboto,
             fontSize: AppFontSizes.xl,
-        ),),
+          ),
+        ),
       ),
     );
   }

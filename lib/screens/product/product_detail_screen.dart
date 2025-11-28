@@ -118,7 +118,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               ),
                             );
                           },
-                          itemCount: state.productdetailsmodel?.tags?.length,
+                          itemCount: state.productdetailsmodel?.tags?.length ?? 0,
                           scrollDirection: Axis.horizontal,
                         ),
                       ),

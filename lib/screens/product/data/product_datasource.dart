@@ -28,7 +28,7 @@ class ProductDatasource {
 
   Future<dynamic> getproductbyid (int id) async{
     try{
-      final response = await getMethod(endpoint: ApiConstant.products + '/' + id.toString());
+      final response = await getMethod(endpoint: '${ApiConstant.products}/$id');
       return response;
     } catch (e){
       print(e);
@@ -37,7 +37,7 @@ class ProductDatasource {
 
   Future<dynamic> getproductcategorylist () async{
     try{
-      final response = await getMethod(endpoint: ApiConstant.products + ApiConstant.category_list);
+      final response = await getMethod(endpoint: '${ApiConstant.products}${ApiConstant.category_list}');
       return response;
     } catch (e){
       print(e);

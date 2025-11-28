@@ -71,6 +71,7 @@ class TextfieldComponent extends StatelessWidget {
           keyboardType: textinputtype,
           validator: validator,
           onFieldSubmitted: onFieldSubmitted,
+          autovalidateMode: .onUserInteraction,
         ),
       ],
     );
