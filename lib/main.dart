@@ -1,5 +1,3 @@
-import 'dart:convert';
-import 'package:demo_users_app/bottom_navigation_barr.dart';
 import 'package:demo_users_app/cm.dart';
 import 'package:demo_users_app/helper/shared_preference_helper.dart';
 import 'package:demo_users_app/http/internet_bloc/internet_bloc.dart';
@@ -7,7 +5,6 @@ import 'package:demo_users_app/http/internet_bloc/internet_state.dart';
 import 'package:demo_users_app/screens/auth/splash_screen.dart';
 import 'package:demo_users_app/screens/users/model/user_response.dart';
 import 'package:demo_users_app/utils/utils.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -34,14 +31,14 @@ class MyApp extends StatelessWidget {
         if (state.internetstatus == InternetStatus.connected) {
           Cm.showSnackBar(
             navigatorKey.currentContext!,
-            message: 'connected',
+            message: 'Back online',
             bg: AppColors.greencolor,
           );
         }
         if (state.internetstatus == InternetStatus.disconnected) {
           Cm.showSnackBar(
             navigatorKey.currentContext!,
-            message: 'disconnected',
+            message: 'Please check your internet connection',
             bg: AppColors.redcolor,
           );
         }
