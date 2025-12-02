@@ -22,8 +22,7 @@ class ProductScreen extends StatefulWidget {
   State<ProductScreen> createState() => _ProductScreenState();
 }
 
-class _ProductScreenState extends State<ProductScreen>
-    with SingleTickerProviderStateMixin {
+class _ProductScreenState extends State<ProductScreen> {
   final ProductBloc productbloc = ProductBloc(
     ProductDatarepository(ProductDatasource()),
   );
@@ -36,12 +35,10 @@ class _ProductScreenState extends State<ProductScreen>
   final ScrollController scrollController = ScrollController();
   final ScrollController sortlistscrollController = ScrollController();
   ValueNotifier<int> scrollNotifier = ValueNotifier(-1);
-  late TabController _tabController;
 
   @override
   void initState() {
     // TODO: implement initState
-    _tabController = TabController(length: 2, vsync: this);
     productbloc.add(FetchProductCategoryListEvent());
     productbloc.add(FetchAllProductsEvent());
     scrollController.addListener(scrollPosition);
@@ -51,7 +48,6 @@ class _ProductScreenState extends State<ProductScreen>
   @override
   void dispose() {
     // TODO: implement dispose
-    _tabController.dispose();
     super.dispose();
   }
 
@@ -93,12 +89,12 @@ class _ProductScreenState extends State<ProductScreen>
     return BlocListener<ProductBloc, ProductState>(
       bloc: productbloc,
       listener: (context, state) {
-        if (state.apicallstate == ProductApiCallState.success) {
-          productmodel = state.productmodel;
+        if (state.productapicallstate == ApiCallState.success) {
+          productmodel = state.productModel;
           productcategorylist = state.productcategorylist;
           setState(() {});
         }
-        if (state.apicallstate == ProductApiCallState.failure) {
+        if (state.productapicallstate == ApiCallState.failure) {
           Cm.showSnackBar(context, message: state.error.toString());
         }
       },
@@ -277,41 +273,11 @@ class _ProductScreenState extends State<ProductScreen>
                   ],
                 ),
               ),
-              SizedBox(
-                height: 48,
-                child: TabBar(
-                  controller: _tabController,
-                  indicatorColor: AppColors.primarycolor,
-                  labelColor: AppColors.primarycolor,
-                  unselectedLabelColor: AppColors.greywithshade,
-                  tabs: [
-                    Tab(
-                      child: Text(
-                        'Grid',
-                        style: TextStyle(
-                          fontSize: AppFontSizes.lg,
-                          fontFamily: Appfonts.robotobold,
-                        ),
-                      ),
-                    ),
-                    Tab(
-                      child: Text(
-                        'List',
-                        style: TextStyle(
-                          fontSize: AppFontSizes.lg,
-                          fontFamily: Appfonts.robotobold,
-                        ),
-                      ),
-                    ),
-                  ],
-                  dividerColor: AppColors.greywithshade.withOpacity(0.2),
-                ),
-              ),
               sb(10),
               BlocBuilder<ProductBloc, ProductState>(
                 bloc: productbloc,
                 builder: (context, state) {
-                  if (state.apicallstate == ProductApiCallState.busy) {
+                  if (state.productapicallstate == ApiCallState.busy) {
                     return Expanded(
                       child: Center(
                         child: CircularProgressIndicator(
@@ -328,9 +294,7 @@ class _ProductScreenState extends State<ProductScreen>
                           )
                         : Expanded(
                             // flex: 10,
-                            child: TabBarView(
-                              controller: _tabController,
-                              children: [
+                            child:
                                 RefreshIndicator(
                                   color: AppColors.primarycolor,
                                   backgroundColor: AppColors.whitecolor,
@@ -364,33 +328,6 @@ class _ProductScreenState extends State<ProductScreen>
                                         ),
                                       ),
                                 ),
-                                RefreshIndicator(
-                                  color: AppColors.primarycolor,
-                                  backgroundColor: AppColors.whitecolor,
-                                  onRefresh: onReferesh,
-                                  child: ListView.builder(
-                                    controller: scrollController,
-                                    itemCount: list?.length,
-                                    itemBuilder: (context, index) {
-                                      final fields = list?[index];
-                                      return listItemCard(
-                                        imageUrl: fields?.thumbnail,
-                                        title: fields?.title,
-                                        price: "\$${fields?.price}",
-                                        ontap: () =>
-                                            onTapProductItemCard(fields?.id),
-                                      ).withPadding(
-                                        padding: .only(
-                                          bottom: 12,
-                                          left: AppPadding.lg,
-                                          right: AppPadding.lg,
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ],
-                            ),
                           );
                     // productmodel?.products?.isEmpty == true
                     //   ? Expanded(
@@ -463,60 +400,6 @@ class _ProductScreenState extends State<ProductScreen>
         ),
       ),
     );
-  }
-
-  Widget listItemCard({
-    String? imageUrl,
-    String? title,
-    String? price,
-    VoidCallback? ontap,
-  }) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: .circular(AppRadius.md),
-        color: AppColors.whitecolor,
-        border: Border.all(color: AppColors.greywithshade.withOpacity(0.2)),
-      ),
-      padding: EdgeInsets.all(AppPadding.md),
-      child: Row(
-        children: [
-          SizedBox(
-            height: 80,
-            width: 80,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(AppRadius.lg),
-              child: Image.network(imageUrl ?? '', fit: BoxFit.contain),
-            ),
-          ),
-          sbw(12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title ?? '',
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontFamily: Appfonts.robotomedium,
-                    fontSize: AppFontSizes.lg,
-                  ),
-                ),
-                sb(6),
-                Text(
-                  price ?? '',
-                  style: TextStyle(
-                    color: AppColors.primarycolor,
-                    fontSize: AppFontSizes.lg,
-                    fontFamily: Appfonts.robotomedium,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    ).onTapEvent(ontap!,);
   }
 
   onChangedSearchBar(String value) {
