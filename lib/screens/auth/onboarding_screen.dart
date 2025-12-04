@@ -61,7 +61,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   ontap: () {
                     callNextScreenAndClearStack(context, LoginScreen());
                   },
-                  buttontitle: 'skip',
+                  buttontitle: AppLabels.skip,
                   bgcolor: AppColors.primarycolor,
                 ),
               ).withPadding(padding: EdgeInsets.symmetric(horizontal: 20)),
@@ -87,7 +87,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           _updateCurrentPageIndex(_currentPageIndex - 1);
                         }
                       },
-                      buttontitle: 'previous',
+                      buttontitle: AppLabels.previous,
                       bgcolor: AppColors.greywithshade.withOpacity(0.2),
                     ),
                   ),
@@ -109,7 +109,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           _updateCurrentPageIndex(_currentPageIndex + 1);
                         }
                       },
-                      buttontitle: 'next',
+                      buttontitle: AppLabels.next,
                     ),
                   ),
                 ),

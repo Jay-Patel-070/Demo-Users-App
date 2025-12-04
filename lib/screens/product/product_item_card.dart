@@ -1,5 +1,6 @@
 import 'package:demo_users_app/components/button_component.dart';
 import 'package:demo_users_app/extension.dart';
+import 'package:demo_users_app/main.dart';
 import 'package:demo_users_app/utils/utils.dart';
 import 'package:flutter/material.dart';
 
@@ -26,12 +27,20 @@ class _productItemCardState extends State<productItemCard> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
+        color: AppColors.greywithshade.withValues(alpha: 0.01),
         border: Border.all(
           width: 1,
           color: AppColors.greywithshade.withOpacity(0.2),
         ),
-        color: AppColors.whitecolor,
         borderRadius: .circular(AppRadius.md),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.greywithshade.withOpacity(0.06),  // very soft black (Card default)
+            blurRadius: 3,
+            spreadRadius: 2,
+            offset: Offset(3, 2),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -85,7 +94,7 @@ class _productItemCardState extends State<productItemCard> {
                     // )
                   ],
                 )
-    
+
               ],
             ),
           ),

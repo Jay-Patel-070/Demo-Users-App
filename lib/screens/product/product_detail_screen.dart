@@ -45,17 +45,16 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     return BlocListener<ProductBloc, ProductState>(
       bloc: productbloc,
       listener: (context, state) {
-        if (state.apicallstate == ProductApiCallState.failure) {
-          print('error');
+        if (state.productapicallstate == ApiCallState.failure) {
+          Cm.showSnackBar(context, message: AppStrings.error_fetching_product_details);
         }
       },
       child: BlocBuilder<ProductBloc, ProductState>(
         bloc: productbloc,
         builder: (context, state) {
           return Scaffold(
-            backgroundColor: Colors.white,
             appBar: PreferredSize(preferredSize: Size(double.infinity, 50), child: AppbarComponent(title: AppLabels.product_details,centertitle: true,)),
-            body: state.apicallstate == ProductApiCallState.busy
+            body: state.productapicallstate == ApiCallState.busy
                 ? Center(child: CircularProgressIndicator(color: AppColors.primarycolor,))
                 : ListView(
                     padding: .symmetric(horizontal: 16),
@@ -123,7 +122,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         ),
                       ),
                       expansionTileSection(
-                        title: "Product Description",
+                        title: AppLabels.product_description,
                         content: Text(
                           state.productdetailsmodel?.description ?? '',
                           style: TextStyle(
@@ -136,16 +135,16 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         initiallyExpanded: true,
                       ),
                       expansionTileSection(
-                        title: "Product Details",
+                        title: AppLabels.product_details,
                         content: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             infoRow(
-                              "Stock",
+                              AppLabels.stock,
                               state.productdetailsmodel?.stock.toString() ?? '',
                             ),
                             infoRow(
-                              "SKU",
+                              AppLabels.sku,
                               state.productdetailsmodel?.sku ?? '',
                             ),
                             infoRow(
@@ -329,8 +328,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       collapsedShape: RoundedRectangleBorder(
         side: BorderSide(color: AppColors.transparent),
       ),
-      iconColor: AppColors.blackcolor,
-      collapsedIconColor: AppColors.blackcolor,
     );
   }
 }

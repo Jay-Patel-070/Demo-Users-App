@@ -76,7 +76,7 @@ class _EditScreenState extends State<EditScreen> {
     return BlocListener<UsersBloc, UsersState>(
       bloc: usersBloc,
       listener: (context, state) {
-        if (state.apicallstate == UsersApiCallState.success) {
+        if (state.usersapicallstate == ApiCallState.success) {
           sharedprefshelper.saveData(
             LocalStorageKeys.userData,
             jsonEncode(state.userresponse?.toJson()),
@@ -84,7 +84,7 @@ class _EditScreenState extends State<EditScreen> {
           userData = state.userresponse;
           Navigator.pop(context, true);
         }
-        if (state.apicallstate == UsersApiCallState.failure) {
+        if (state.usersapicallstate == ApiCallState.failure) {
           Cm.showSnackBar(context, message: state.error.toString());
         }
       },
@@ -195,7 +195,7 @@ class _EditScreenState extends State<EditScreen> {
               child: ButtonComponent(
                 ontap: onTapSaveChanges,
                 buttontitle: AppLabels.save_changes,
-                isloading: state.apicallstate == UsersApiCallState.busy
+                isloading: state.usersapicallstate == ApiCallState.busy
                     ? true
                     : false,
               ),

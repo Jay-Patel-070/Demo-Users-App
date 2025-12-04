@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'package:demo_users_app/bottom_navigation_barr.dart';
 import 'package:demo_users_app/cm.dart';
@@ -22,7 +23,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> navigateFromSplash() async {
-    final String? token = getAccessToken();
+    final String? token = await getAccessToken();
     userData = getUserData();
     Future.delayed(Duration(seconds: 2), () {
       if (token.isNotNullOrEmpty()) {

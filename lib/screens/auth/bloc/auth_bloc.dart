@@ -9,27 +9,27 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<LoginButtonPressEvent>(onloginbuttonpressevent);
   }
   onloginbuttonpressevent(LoginButtonPressEvent event, emmit) async {
-    emmit(state.copywith(apicallstate: LoginApiCallState.busy));
+    emmit(state.copywith(loginapicallstate: ApiCallState.busy));
     try {
       final result = await authdatarepository.loginapi(
         username: event.username,
         password: event.password,
       );
-      emmit(state.copywith(apicallstate: LoginApiCallState.busy));
+      emmit(state.copywith(loginapicallstate: ApiCallState.busy));
       result.when(success: (data) {
         emmit(
           state.copywith(
-            apicallstate: LoginApiCallState.success,
+            loginapicallstate: ApiCallState.success,
             loginresponsemodel: result.data,
           ),
         );
       }, failure: (error) {
-        emmit(state.copywith(apicallstate: LoginApiCallState.failure,error: error));
+        emmit(state.copywith(loginapicallstate: ApiCallState.failure,error: error));
       },);
-      emmit(state.copywith(apicallstate: LoginApiCallState.none));
+      emmit(state.copywith(loginapicallstate: ApiCallState.none));
     } catch (e) {
-      emmit(state.copywith(apicallstate: LoginApiCallState.busy));
-      emmit(state.copywith(apicallstate: LoginApiCallState.failure));
+      emmit(state.copywith(loginapicallstate: ApiCallState.busy));
+      emmit(state.copywith(loginapicallstate: ApiCallState.failure));
     }
   }
 }

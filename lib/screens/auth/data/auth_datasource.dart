@@ -10,6 +10,7 @@ class AuthDatasource {
       Map<String,dynamic> params = {
             "username": username,
             "password": password,
+        "expiresInMins": 1
       };
       final response = await postMethod(endpoint: ApiConstant.login,body: params);
       return response;

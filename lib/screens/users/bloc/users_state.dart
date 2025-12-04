@@ -1,23 +1,26 @@
 
 import 'package:demo_users_app/screens/users/model/user_response.dart';
 
-enum UsersApiCallState { none, busy, success, failure }
+enum ApiCallState { none, busy, success, failure }
 
 class UsersInitialState extends UsersState {}
 
 class UsersState {
-  UsersApiCallState apicallstate;
+  ApiCallState usersapicallstate;
+  ApiCallState editusersapicallstate;
   UserResponse? userresponse;
   String? error;
-  UsersState({this.apicallstate = UsersApiCallState.none, this.userresponse,this.error});
+  UsersState({this.usersapicallstate = ApiCallState.none, this.editusersapicallstate = ApiCallState.none, this.userresponse,this.error});
   UsersState copywith({
-    UsersApiCallState? apicallstate,
+    ApiCallState? usersapicallstate,
+    ApiCallState? editusersapicallstate,
     UserResponse? userresponse,
     String? error
   }) {
     return UsersState(
-        apicallstate: apicallstate ?? this.apicallstate,
+        usersapicallstate: usersapicallstate ?? this.usersapicallstate,
         userresponse: userresponse ?? this.userresponse,
+        editusersapicallstate: editusersapicallstate ?? this.editusersapicallstate,
         error: error ?? this.error
     );
   }

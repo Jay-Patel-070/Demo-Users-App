@@ -53,7 +53,6 @@ class _AllUserScreenState extends State<AllUserScreen> {
       ),
       body: Column(
         children: [
-          sb(20),
           Padding(
             padding: .symmetric(horizontal: AppPadding.md),
             child: SearchbarComponent(

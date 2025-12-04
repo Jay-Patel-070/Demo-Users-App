@@ -14,8 +14,8 @@ class BottomNavigationBarr extends StatefulWidget {
 class _BottomNavigationBarrState extends State<BottomNavigationBarr> {
   final List screens = [
     AllUserScreen(),
+    ProductScreen(),
     SettingsScreen(),
-    ProductScreen()
   ];
 
   int _selectedIndex = 0;
@@ -34,7 +34,7 @@ class _BottomNavigationBarrState extends State<BottomNavigationBarr> {
         decoration: BoxDecoration(
           border: BoxBorder.fromLTRB(
             top: BorderSide(
-              color: AppColors.secondarycolor.withOpacity(0.2),
+              color: AppColors.greywithshade.withOpacity(0.2),
               style: BorderStyle.solid
             ),
           )
@@ -46,17 +46,16 @@ class _BottomNavigationBarrState extends State<BottomNavigationBarr> {
                 label: AppLabels.users,
               ),
               BottomNavigationBarItem(
+                icon: Icon(Icons.inventory_2_outlined),
+                label: AppLabels.products,
+              ),
+              BottomNavigationBarItem(
                 icon: Icon(Icons.settings_outlined),
                 label: AppLabels.settings,
               ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.inventory_2_outlined),
-                label: AppLabels.products,
-              )
             ],
           currentIndex: _selectedIndex,
           onTap: _onItemTapped,
-          backgroundColor: AppColors.whitecolor,
           unselectedItemColor: AppColors.greywithshade,
           selectedItemColor: AppColors.primarycolor,
           type: BottomNavigationBarType.fixed,

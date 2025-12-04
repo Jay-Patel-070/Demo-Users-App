@@ -33,7 +33,6 @@ class _SignupScreenState extends State<SignupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.whitecolor,
       appBar: PreferredSize(
         preferredSize: Size(double.infinity, 50),
         child: AppbarComponent(

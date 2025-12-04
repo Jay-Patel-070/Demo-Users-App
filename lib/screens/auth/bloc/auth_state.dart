@@ -1,22 +1,22 @@
 
 import 'package:demo_users_app/screens/auth/model/login_response_model.dart';
 
-enum LoginApiCallState { none, busy, success, failure }
+enum ApiCallState { none, busy, success, failure }
 
 class AuthInitialState extends AuthState {}
 
 class AuthState {
-  LoginApiCallState apicallstate;
+  ApiCallState loginapicallstate;
   LoginResponseModel? loginresponsemodel;
   String? error;
-  AuthState({this.apicallstate = LoginApiCallState.none, this.loginresponsemodel,this.error});
+  AuthState({this.loginapicallstate = ApiCallState.none, this.loginresponsemodel,this.error});
   AuthState copywith({
-    LoginApiCallState? apicallstate,
+    ApiCallState? loginapicallstate,
     LoginResponseModel? loginresponsemodel,
     String? error
   }) {
     return AuthState(
-      apicallstate: apicallstate ?? this.apicallstate,
+      loginapicallstate: loginapicallstate ?? this.loginapicallstate,
       loginresponsemodel: loginresponsemodel ?? this.loginresponsemodel,
       error: error ?? this.error
     );

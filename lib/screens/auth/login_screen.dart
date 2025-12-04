@@ -58,10 +58,11 @@ class _LoginScreenState extends State<LoginScreen> {
     return BlocListener<AuthBloc, AuthState>(
       bloc: authBloc,
       listener: (context, state) async{
-        if (state.apicallstate == LoginApiCallState.success) {
+        if (state.loginapicallstate == ApiCallState.success) {
          await sharedprefshelper.saveData(LocalStorageKeys.accessToken, state.loginresponsemodel?.accessToken);
+         await sharedprefshelper.saveData(LocalStorageKeys.refreshToken, state.loginresponsemodel?.refreshToken);
          callNextScreenAndClearStack(context, BottomNavigationBarr());
-        }else if (state.apicallstate == LoginApiCallState.failure){
+        }else if (state.loginapicallstate == ApiCallState.failure){
           Cm.showSnackBar(context, message: state.error.toString());
         }
       },
@@ -138,7 +139,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ButtonComponent(
                               buttontitle: AppLabels.login,
                               ontap: () => onpressLogin(),
-                              isloading: state.apicallstate == LoginApiCallState.busy ? true : false,
+                              isloading: state.loginapicallstate == ApiCallState.busy ? true : false,
                             ),
                             SizedBox(height: 50),
                             Row(

@@ -1,10 +1,15 @@
 import 'dart:convert';
 import 'package:demo_users_app/cm.dart';
 import 'package:demo_users_app/components/appbar_component.dart';
+import 'package:demo_users_app/components/button_component.dart';
 import 'package:demo_users_app/components/user_listtile_component.dart';
+import 'package:demo_users_app/extension.dart';
 import 'package:demo_users_app/helper/shared_preference_helper.dart';
 import 'package:demo_users_app/main.dart';
 import 'package:demo_users_app/screens/auth/login_screen.dart';
+import 'package:demo_users_app/screens/theme/bloc/theme_bloc.dart';
+import 'package:demo_users_app/screens/theme/bloc/theme_event.dart';
+import 'package:demo_users_app/screens/theme/bloc/theme_state.dart';
 import 'package:demo_users_app/screens/users/bloc/users_bloc.dart';
 import 'package:demo_users_app/screens/users/bloc/users_event.dart';
 import 'package:demo_users_app/screens/users/bloc/users_state.dart';
@@ -26,14 +31,18 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   final SharedPrefsHelper sharedprefshelper = SharedPrefsHelper();
   final UsersBloc usersBloc = UsersBloc(UserDatarepository(UserDatasource()));
-
   // LoginResponseModel userData = getUserData();
+  int isselected = themeBloc.state.mode == ThemeMode.system
+      ? 2
+      : themeBloc.state.mode == ThemeMode.dark
+      ? 1
+      : 0;
 
   @override
   void initState() {
-    if(userData == null){
-    usersBloc.add(FetchAuthUserEvent());
-    }
+    // if (userData == null) {
+      usersBloc.add(FetchAuthUserEvent());
+    // }
     super.initState();
   }
 
@@ -42,39 +51,77 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return BlocListener<UsersBloc, UsersState>(
       bloc: usersBloc,
       listener: (context, state) {
-        if (state.apicallstate == UsersApiCallState.success) {
-          sharedprefshelper.saveData(LocalStorageKeys.userData, jsonEncode(state.userresponse?.toJson()));
+        if (state.usersapicallstate == ApiCallState.success) {
+          // sharedprefshelper.saveData(
+          //   LocalStorageKeys.userData,
+          //   jsonEncode(state.userresponse?.toJson()),
+          // );
           userData = state.userresponse;
         }
-        if (state.apicallstate == UsersApiCallState.failure) {
+        if (state.usersapicallstate == ApiCallState.failure) {
           Cm.showSnackBar(context, message: state.error.toString());
         }
       },
       child: Scaffold(
         appBar: PreferredSize(
           preferredSize: Size(double.infinity, 50),
-          child: AppbarComponent(title: AppLabels.settings),
+          child: AppbarComponent(title: AppLabels.settings,centertitle: true,),
         ),
         body: BlocBuilder<UsersBloc, UsersState>(
           bloc: usersBloc,
           builder: (context, state) {
-            if(state.apicallstate == UsersApiCallState.busy){
+            if (state.usersapicallstate == ApiCallState.busy || userData == null) {
               return Center(child: CircularProgressIndicator());
             }
             return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: AppPadding.lg, vertical: AppPadding.lg),
+              padding: EdgeInsets.symmetric(
+                horizontal: AppPadding.lg,
+                vertical: AppPadding.lg,
+              ),
               child: Column(
                 crossAxisAlignment: .start,
                 children: [
-                  UserListtileComponent(
-                    email: "${userData?.email}",
-                    name: '${userData?.firstName} ${userData?.lastName}',
-                    image: '${userData?.image}',
-                    showicon: false,
+                  Center(
+                    child: Column(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: AppColors.greywithshade.withValues(alpha: 0.2),
+                              width: 2,
+                            ),
+                          ),
+                          child: CircleAvatar(
+                            radius: 60,
+                            backgroundColor: AppColors.whitecolor,
+                            backgroundImage: NetworkImage("${userData?.image}"),
+                          ),
+                        ),
+                        sb(20),
+                        Text(
+                          '${userData?.firstName} ${userData?.lastName}',
+                          style: TextStyle(
+                            fontSize: AppFontSizes.xl,
+                            fontFamily: Appfonts.robotobold,
+                          ),
+                        ),
+                        Text(
+                          '${userData?.email}',
+                          style: TextStyle(
+                            color: AppColors.greycolor,
+                            fontSize: AppFontSizes.lg,
+                            fontFamily: Appfonts.roboto,
+                          ),
+                        ),
+                      ],
+                    ).onTapEvent(() {
+                      callNextScreen(context, UserProfileScreen());
+                    },),
                   ),
                   sb(20),
                   Text(
-                    AppLabels.general,
+                    AppLabels.theme,
                     style: TextStyle(
                       fontSize: AppFontSizes.xl,
                       fontFamily: Appfonts.robotomedium,
@@ -82,21 +129,49 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                   ),
                   sb(20),
-                  tile(
-                    title: AppLabels.profile,
-                    icon: Icons.person_outline,
-                    ontap: () {
-                      callNextScreen(context, UserProfileScreen());
-                    },
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      themeWidget(
+                        bgcolor: AppColors.whitecolor,
+                        bordercolor: AppColors.blackcolor,
+                        isSelected: isselected == 0 ? true : false,
+                        title: 'Light',
+                      ).onTapEvent(() {
+                        themeBloc.add(SetThemeEvent(ThemeMode.light));
+                        setState(() {
+                          isselected = 0;
+                        });
+                      }),
+                      themeWidget(
+                        bgcolor: AppColors.blackcolor,
+                        bordercolor: AppColors.whitecolor.withValues(
+                          alpha: 0.5,
+                        ),
+                        isSelected: isselected == 1 ? true : false,
+                        title: 'Dark',
+                      ).onTapEvent(() {
+                        themeBloc.add(SetThemeEvent(ThemeMode.dark));
+                        setState(() {
+                          isselected = 1;
+                        });
+                      }),
+                      themeWidget(
+                        bgcolor: AppColors.greycolor.withValues(alpha: 0.4),
+                        bordercolor: isselected == 0
+                            ? AppColors.blackcolor
+                            : AppColors.whitecolor.withValues(alpha: 0.5),
+                        isSelected: isselected == 2 ? true : false,
+                        title: 'System',
+                      ).onTapEvent(() {
+                        themeBloc.add(SetThemeEvent(ThemeMode.system));
+                        setState(() {
+                          isselected = 2;
+                        });
+                      }),
+                    ],
                   ),
                   sb(20),
-                  tile(
-                    title: AppLabels.theme,
-                    subtitle: AppLabels.system,
-                    icon: Icons.brightness_6_outlined,
-                    ontap: () {},
-                  ),
-                  sb(30),
                   Text(
                     AppLabels.account,
                     style: TextStyle(
@@ -132,9 +207,127 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
+  Widget themeWidget({
+    required String title,
+    required Color bordercolor,
+    required Color bgcolor,
+    required bool isSelected,
+  }) {
+    return Column(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(AppRadius.xl),
+              topRight: Radius.circular(AppRadius.xl),
+            ),
+            border: Border(
+              right: BorderSide(
+                width: 4,
+                color: isSelected ? AppColors.primarycolor : Colors.transparent,
+              ),
+              left: BorderSide(
+                width: 4,
+                color: isSelected ? AppColors.primarycolor : Colors.transparent,
+              ),
+              top: BorderSide(
+                width: 4,
+                color: isSelected ? AppColors.primarycolor : Colors.transparent,
+              ),
+            ),
+          ),
+          child: Container(
+            decoration: BoxDecoration(
+              color: bgcolor,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(AppRadius.lg),
+                topRight: Radius.circular(AppRadius.lg),
+              ),
+              border: Border(
+                right: BorderSide(width: 4, color: bordercolor),
+                left: BorderSide(width: 4, color: bordercolor),
+                top: BorderSide(width: 4, color: bordercolor),
+              ),
+            ),
+            height: 70,
+            width: 60,
+            child: Stack(
+              children: [
+                Positioned(
+                  top: 4,
+                  left: 15,
+                  child: Container(
+                    width: 20,
+                    height: 6,
+                    decoration: BoxDecoration(
+                      color: bordercolor,
+                      borderRadius: BorderRadius.circular(AppRadius.md),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ).withPadding(padding: EdgeInsets.all(2)),
+        ),
+        sb(5),
+        Text(
+          title,
+          style: TextStyle(
+            fontSize: AppFontSizes.md,
+            fontFamily: Appfonts.robotomedium,
+            color: AppColors.greywithshade,
+          ),
+        ),
+      ],
+    );
+  }
+
   onTapLogOut() {
-    sharedprefshelper.clearAllData();
-    callNextScreenAndClearStack(context, LoginScreen());
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          titlePadding: .only(left:AppPadding.lg,right:AppPadding.lg,top:AppPadding.md),
+          actionsPadding: .symmetric(horizontal:AppPadding.lg,vertical: AppPadding.md),
+          contentPadding: .symmetric(horizontal:AppPadding.lg,vertical: AppPadding.sm),
+          title: Text('Logout Confirmation'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Are you sure you want to log out?'),
+                sb(5),
+                Text('You will need to sign in again to access your account.'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(
+                  width: 70,
+                  height: 40,
+                  child: ButtonComponent(ontap: () {
+                    Navigator.of(dialogContext).pop();
+                  }, buttontitle: 'Cancel'),
+                ),
+                SizedBox(
+                  width: 70,
+                  height: 40,
+                  child: ButtonComponent(ontap: () {
+                    sharedprefshelper.clearAllData();
+                    callNextScreenAndClearStack(context, LoginScreen());
+                  }, buttontitle: 'Logout',bgcolor: AppColors.redcolor,),
+                ),
+              ],
+            )
+
+          ],
+        );
+      },
+    );
+
   }
 
   Widget tile({
@@ -154,24 +347,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
       child: ListTile(
         onTap: ontap,
-        leading: Icon(icon, color: color ?? AppColors.blackcolor),
+        leading: Icon(icon, color: color),
         title: Text(
           title,
           style: TextStyle(
             fontFamily: Appfonts.roboto,
             fontSize: AppFontSizes.xl,
-            color: titlecolor ?? AppColors.blackcolor,
+            color: titlecolor,
           ),
         ),
         subtitle: subtitle != null
             ? Text(
-          subtitle,
-          style: TextStyle(
-            fontFamily: Appfonts.roboto,
-            fontSize: AppFontSizes.md,
-            color: AppColors.greywithshade,
-          ),
-        )
+                subtitle,
+                style: TextStyle(
+                  fontFamily: Appfonts.roboto,
+                  fontSize: AppFontSizes.md,
+                  color: AppColors.greywithshade,
+                ),
+              )
             : null,
         trailing: showicon == true
             ? Icon(Icons.chevron_right_rounded, color: AppColors.greywithshade)

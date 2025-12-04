@@ -3,6 +3,9 @@ import 'package:demo_users_app/helper/shared_preference_helper.dart';
 import 'package:demo_users_app/http/internet_bloc/internet_bloc.dart';
 import 'package:demo_users_app/http/internet_bloc/internet_state.dart';
 import 'package:demo_users_app/screens/auth/splash_screen.dart';
+import 'package:demo_users_app/screens/theme/bloc/theme_bloc.dart';
+import 'package:demo_users_app/screens/theme/bloc/theme_mode.dart';
+import 'package:demo_users_app/screens/theme/bloc/theme_state.dart';
 import 'package:demo_users_app/screens/users/model/user_response.dart';
 import 'package:demo_users_app/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +14,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 final SharedPrefsHelper sharedprefshelper = SharedPrefsHelper();
 UserResponse? userData;
 final navigatorKey = GlobalKey<NavigatorState>();
+ThemeBloc themeBloc = ThemeBloc();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,27 +35,30 @@ class MyApp extends StatelessWidget {
         if (state.internetstatus == InternetStatus.connected) {
           Cm.showSnackBar(
             navigatorKey.currentContext!,
-            message: 'Back online',
+            message: AppStrings.welcome_back_online,
             bg: AppColors.greencolor,
           );
         }
         if (state.internetstatus == InternetStatus.disconnected) {
           Cm.showSnackBar(
             navigatorKey.currentContext!,
-            message: 'Please check your internet connection',
+            message: AppStrings.oops_you_are_offline,
             bg: AppColors.redcolor,
           );
         }
       },
-      child: MaterialApp(
-        navigatorKey: navigatorKey,
-        title: AppLabels.demo_users_app,
-        theme: ThemeData(
-          appBarTheme: AppBarTheme(backgroundColor: AppColors.whitecolor),
-          scaffoldBackgroundColor: AppColors.whitecolor,
-          useMaterial3: true,
-        ),
-        home: SplashScreen(),
+      child: BlocBuilder<ThemeBloc, ThemeState>(
+        bloc: themeBloc,
+        builder: (context, state) {
+          return MaterialApp(
+            navigatorKey: navigatorKey,
+            title: AppLabels.demo_users_app,
+            theme: AppTheme.light,
+            themeMode: state.mode,
+            darkTheme: AppTheme.dark,
+            home: SplashScreen(),
+          );
+        },
       ),
     );
   }

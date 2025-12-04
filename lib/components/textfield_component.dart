@@ -62,7 +62,7 @@ class TextfieldComponent extends StatelessWidget {
             ),
             suffixIcon: IconButton(
               onPressed: suffixicontap,
-              icon: Icon(suffixicon,color: AppColors.blackcolor,),
+              icon: Icon(suffixicon),
             ),
           ),
           obscureText: obsecuretext ?? false,

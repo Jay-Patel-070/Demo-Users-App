@@ -28,14 +28,14 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   if (value == true) {
                     Cm.showSnackBar(
                       context,
-                      message: 'User details updated successfully',
+                      message: AppStrings.user_details_updated_successfully,
                       bg: AppColors.greencolor,
                     );
                     setState(() {});
                   } else {
                     Cm.showSnackBar(
                       context,
-                      message: 'No changes made to user details',
+                      message: AppStrings.no_changes_made_to_user_details,
                       bg: AppColors.greycolor,
                     );
                   }
@@ -63,10 +63,19 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 Center(
                   child: Column(
                     children: [
-                      CircleAvatar(
-                        radius: 60,
-                        backgroundColor: AppColors.whitecolor,
-                        backgroundImage: NetworkImage("${userData?.image}"),
+                      Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: AppColors.greywithshade.withValues(alpha: 0.2),
+                            width: 2,
+                          ),
+                        ),
+                        child: CircleAvatar(
+                          radius: 60,
+                          backgroundColor: AppColors.whitecolor,
+                          backgroundImage: NetworkImage("${userData?.image}"),
+                        ),
                       ),
                       sb(20),
                       Text(

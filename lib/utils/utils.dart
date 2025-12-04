@@ -2,20 +2,43 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
+// class AppColors {
+//   static Color primarycolor = Color(0xFF4A90E2);
+//   static Color secondarycolor = Color(0x964A90E2);
+//   static const Color greywithshade = Color.fromRGBO(117, 117, 117, 1);
+//   static const Color greywithshade2 = Color.fromRGBO(231, 226, 226, 1.0);
+//   static Color whitecolor = Colors.white;
+//   static const Color greencolor = Colors.green;
+//   static const Color transparent = Colors.transparent;
+//   static Color blackcolor = Colors.black;
+//   static Color greycolor = Colors.grey;
+//   static const Color redcolor = Colors.red;
+//   static const Color redwithshade = Color(0xFF8B0000);
+//   static Color bordercolor = Colors.grey;
+//   static Color rating = Colors.amber;
+// }
+
 class AppColors {
-  static const Color primarycolor = Color(0xFF4A90E2);
-  static const Color secondarycolor = Color(0x964A90E2);
-  static const Color greywithshade = Color.fromRGBO(117, 117, 117, 1);
-  static const Color greywithshade2 = Color.fromRGBO(231, 226, 226, 1.0);
-  static const Color whitecolor = Colors.white;
-  static const Color greencolor = Colors.green;
-  static const Color transparent = Colors.transparent;
-  static const Color blackcolor = Colors.black;
+  // These values will change from ThemeBloc
+  static Color primarycolor = const Color(0xFF4A90E2);
+  static Color secondarycolor = const Color(0x964A90E2);
+
+  static Color greywithshade = const Color.fromRGBO(117, 117, 117, 1);
+  static Color greywithshade2 = const Color.fromRGBO(231, 226, 226, 1.0);
+
+  static Color whitecolor = Colors.white;
+  static Color blackcolor = Colors.black;
+
   static Color greycolor = Colors.grey;
-  static const Color redcolor = Colors.red;
-  static const Color redwithshade = Color(0xFF8B0000);
+
   static Color bordercolor = Colors.grey;
   static Color rating = Colors.amber;
+
+  // THESE 2 WON’T CHANGE
+  static const Color greencolor = Colors.green;
+  static const Color redcolor = Colors.red;
+  static const Color transparent = Colors.transparent;
+  static const Color redwithshade = Color(0xFF8B0000);
 }
 
 class AppLabels {
@@ -49,6 +72,12 @@ class AppLabels {
   static const String products = 'Products';
   static const String product_details = 'Product Details';
   static const String add_to_cart = 'Add to Cart';
+  static const String skip = 'skip';
+  static const String previous = 'previous';
+  static const String next = 'next';
+  static const String product_description = "Product Description";
+  static const String stock = "Stock";
+  static const String sku = "SKU";
 }
 
 class AppStrings {
@@ -66,6 +95,11 @@ class AppStrings {
   static const String search_by_name_or_email = 'Search by name or email...';
   static const String Search = 'Search...';
   static const String search_products_by_name_or_sku = 'Search Products by name or sku';
+  static const String welcome_back_online = 'Welcome back online';
+  static const String oops_you_are_offline = 'oops! you are offline';
+  static const String user_details_updated_successfully = 'User details updated successfully';
+  static const String no_changes_made_to_user_details = 'No changes made to user details';
+  static const String error_fetching_product_details = 'Error fetching product details';
 }
 
 class Appfonts {
@@ -78,6 +112,7 @@ class Appfonts {
 
 class LocalStorageKeys {
   static const String accessToken = "accessToken";
+  static const String refreshToken = "refreshToken";
   static const String userData = "userData";
 }
 

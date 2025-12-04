@@ -12,47 +12,47 @@ class UsersBloc extends Bloc<UsersEvent, UsersState> {
 
 
   onFetchAuthUserEvent(FetchAuthUserEvent event, emmit) async {
-    emmit(state.copywith(apicallstate: UsersApiCallState.busy));
+    emmit(state.copywith(usersapicallstate: ApiCallState.busy));
     try {
       final result = await userDatarepository.getcurrentuser();
-      emmit(state.copywith(apicallstate: UsersApiCallState.busy));
+      emmit(state.copywith(usersapicallstate: ApiCallState.busy));
       result.when(success: (data) {
         emmit(
           state.copywith(
-            apicallstate: UsersApiCallState.success,
+            usersapicallstate: ApiCallState.success,
             userresponse: result.data,
           ),
         );
       }, failure: (error) {
-        emmit(state.copywith(apicallstate: UsersApiCallState.failure,error: error));
+        emmit(state.copywith(usersapicallstate: ApiCallState.failure,error: error));
       },);
-      emmit(state.copywith(apicallstate: UsersApiCallState.none));
+      emmit(state.copywith(usersapicallstate: ApiCallState.none));
     } catch (e) {
-      emmit(state.copywith(apicallstate: UsersApiCallState.busy));
-      emmit(state.copywith(apicallstate: UsersApiCallState.failure));
+      emmit(state.copywith(usersapicallstate: ApiCallState.busy));
+      emmit(state.copywith(usersapicallstate: ApiCallState.failure));
     }
   }
 
 
   onUpdateAuthUserEvent(UpdateAuthUserEvent event, emmit) async {
-    emmit(state.copywith(apicallstate: UsersApiCallState.busy));
+    emmit(state.copywith(editusersapicallstate: ApiCallState.busy));
     try {
       final result = await userDatarepository.updatecurrentuser(id: event.id!,params: event.params);
-      emmit(state.copywith(apicallstate: UsersApiCallState.busy));
+      emmit(state.copywith(editusersapicallstate: ApiCallState.busy));
       result.when(success: (data) {
         emmit(
           state.copywith(
-            apicallstate: UsersApiCallState.success,
+            editusersapicallstate: ApiCallState.success,
             userresponse: result.data,
           ),
         );
       }, failure: (error) {
-        emmit(state.copywith(apicallstate: UsersApiCallState.failure,error: error));
+        emmit(state.copywith(editusersapicallstate: ApiCallState.failure,error: error));
       },);
-      emmit(state.copywith(apicallstate: UsersApiCallState.none));
+      emmit(state.copywith(editusersapicallstate: ApiCallState.none));
     } catch (e) {
-      emmit(state.copywith(apicallstate: UsersApiCallState.busy));
-      emmit(state.copywith(apicallstate: UsersApiCallState.failure));
+      emmit(state.copywith(editusersapicallstate: ApiCallState.busy));
+      emmit(state.copywith(editusersapicallstate: ApiCallState.failure));
     }
   }
 }

@@ -5,4 +5,5 @@ class ApiConstant {
   static const String updateauthuser = 'users/';
   static const String products = 'products';
   static const String category_list = '/category-list';
+  static const String auth_refresh = 'auth/refresh';
 }
