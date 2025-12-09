@@ -31,17 +31,27 @@ class AppTheme {
       titleTextStyle: TextStyle(
         color: AppColors.primarycolor,
         fontSize: AppFontSizes.display,
-        fontFamily: Appfonts.robotobold
+        fontFamily: Appfonts.robotobold,
       ),
       contentTextStyle: TextStyle(
         color: AppColors.blackcolor,
-          fontSize: AppFontSizes.md,
-          fontFamily: Appfonts.roboto
+        fontSize: AppFontSizes.md,
+        fontFamily: Appfonts.roboto,
       ),
     ),
     progressIndicatorTheme: ProgressIndicatorThemeData(
       refreshBackgroundColor: AppColors.whitecolor,
-    )
+    ),
+    bottomSheetTheme: BottomSheetThemeData(
+      backgroundColor: AppColors.whitecolor,
+    ),
+    floatingActionButtonTheme: FloatingActionButtonThemeData(
+      backgroundColor: AppColors.whitecolor,
+      elevation: 3,
+    ),
+    snackBarTheme: SnackBarThemeData(
+      contentTextStyle: TextStyle(color: AppColors.whitecolor),
+    ),
   );
   static final ThemeData dark = ThemeData(
     brightness: Brightness.dark,
@@ -71,27 +81,36 @@ class AppTheme {
     popupMenuTheme: PopupMenuThemeData(
       // color: AppColors.blackcolor.withValues(alpha: 0.8),
     ),
-      dialogTheme: DialogThemeData(
-        // shape: RoundedRectangleBorder(
-        //   borderRadius: .circular(AppRadius.md),
-        //   side: BorderSide(
-        //     color: AppColors.greywithshade
-        //   )
-        // ),
-        //   backgroundColor: AppColors.blackcolor,
-          titleTextStyle: TextStyle(
-              color: AppColors.primarycolor,
-              fontSize: AppFontSizes.display,
-              fontFamily: Appfonts.robotobold
-          ),
-          contentTextStyle: TextStyle(
-              color: AppColors.whitecolor,
-              fontSize: AppFontSizes.md,
-              fontFamily: Appfonts.roboto
-          )
+    dialogTheme: DialogThemeData(
+      // shape: RoundedRectangleBorder(
+      //   borderRadius: .circular(AppRadius.md),
+      //   side: BorderSide(
+      //     color: AppColors.greywithshade
+      //   )
+      // ),
+      //   backgroundColor: AppColors.blackcolor,
+      titleTextStyle: TextStyle(
+        color: AppColors.primarycolor,
+        fontSize: AppFontSizes.display,
+        fontFamily: Appfonts.robotobold,
       ),
-      progressIndicatorTheme: ProgressIndicatorThemeData(
-        refreshBackgroundColor: AppColors.blackcolor,
-      )
+      contentTextStyle: TextStyle(
+        color: AppColors.whitecolor,
+        fontSize: AppFontSizes.md,
+        fontFamily: Appfonts.roboto,
+      ),
+    ),
+    progressIndicatorTheme: ProgressIndicatorThemeData(
+      refreshBackgroundColor: AppColors.blackcolor,
+    ),
+    bottomSheetTheme: BottomSheetThemeData(
+      backgroundColor: AppColors.blackcolor,
+    ),
+    floatingActionButtonTheme: FloatingActionButtonThemeData(
+      backgroundColor: AppColors.greywithshade.withValues(alpha: 0.2),
+    ),
+    snackBarTheme: SnackBarThemeData(
+      contentTextStyle: TextStyle(color: AppColors.whitecolor),
+    ),
   );
 }

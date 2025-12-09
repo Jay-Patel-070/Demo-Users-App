@@ -1,6 +1,7 @@
 import 'package:demo_users_app/components/appbar_component.dart';
 import 'package:demo_users_app/components/searchbar_component.dart';
 import 'package:demo_users_app/extension.dart';
+import 'package:demo_users_app/screens/notification/notification_screen.dart';
 import 'package:demo_users_app/screens/product/bloc/product_bloc.dart';
 import 'package:demo_users_app/screens/product/bloc/product_event.dart';
 import 'package:demo_users_app/screens/product/bloc/product_state.dart';
@@ -12,12 +13,14 @@ import 'package:demo_users_app/screens/product/product_item_card.dart';
 import 'package:demo_users_app/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../cm.dart';
 
 class ProductScreen extends StatefulWidget {
-  const ProductScreen({super.key});
+  bool? isfromnotificationtap;
+  ProductScreen({super.key,this.isfromnotificationtap});
 
   @override
   State<ProductScreen> createState() => _ProductScreenState();
@@ -34,10 +37,16 @@ class _ProductScreenState extends State<ProductScreen> {
   final ScrollController scrollController = ScrollController();
   final ScrollController sortlistscrollController = ScrollController();
   ValueNotifier<int> scrollNotifier = ValueNotifier(-1);
+  bool hadFocusBeforeScroll = false;
 
   @override
   void initState() {
     // TODO: implement initState
+    if(widget.isfromnotificationtap == true){
+    callNextScreenWithResult(context, NotificationScreen(),).then((value) {
+      widget.isfromnotificationtap = value;
+    },);
+    }
     productbloc.add(FetchProductCategoryListEvent());
     productbloc.add(FetchAllProductsEvent(skip: 0));
     scrollController.addListener(scrollPosition);
@@ -81,15 +90,18 @@ class _ProductScreenState extends State<ProductScreen> {
     } else if (position > mid) {
       scrollNotifier.value = 1;
     }
-    if(searchfocusnode.hasFocus){
-      if (scrollController.position.userScrollDirection == ScrollDirection.reverse) {
-        FocusScope.of(context).unfocus();
+    if (position > 300) {
+      if (searchfocusnode.hasFocus) {
+        hadFocusBeforeScroll = true;
+        // searchfocusnode.unfocus();
+        SystemChannels.textInput.invokeMethod('TextInput.hide');
       }
+    }
 
-      if (scrollController.position.userScrollDirection == ScrollDirection.forward) {
-        if (searchfocusnode.hasFocus && !searchfocusnode.hasFocus) {
-          searchfocusnode.requestFocus();
-        }
+    if (position <= min) {
+      if (hadFocusBeforeScroll /*&& !searchfocusnode.hasFocus*/ ) {
+        //   searchfocusnode.requestFocus();
+        SystemChannels.textInput.invokeMethod('TextInput.show');
       }
     }
     if (position == max) {
@@ -136,7 +148,9 @@ class _ProductScreenState extends State<ProductScreen> {
             title: AppLabels.products,
             centertitle: true,
             actions: [
-              IconButton(onPressed: onReferesh, icon: Icon(Icons.refresh)),
+              IconButton(onPressed: () {
+                callNextScreen(context, NotificationScreen());
+              }, icon: Icon(Icons.notifications_outlined)),
             ],
           ),
         ),
@@ -149,6 +163,7 @@ class _ProductScreenState extends State<ProductScreen> {
                 hintText: AppStrings.search_products_by_name_or_sku,
                 onChanged: onChangedSearchBar,
                 onClear: onClearSearchBar,
+                // readOnly: !hadFocusBeforeScroll,
               ).withPadding(padding: .symmetric(horizontal: AppPadding.lg)),
               sb(10),
               BlocBuilder<ProductBloc, ProductState>(
@@ -160,7 +175,7 @@ class _ProductScreenState extends State<ProductScreen> {
                         SizedBox(
                           height: 50,
                           child: ListView(
-                            padding: .symmetric(horizontal:AppPadding.lg),
+                            padding: .symmetric(horizontal: AppPadding.lg),
                             scrollDirection: Axis.horizontal,
                             physics: BouncingScrollPhysics(),
                             controller: sortlistscrollController,
@@ -320,9 +335,7 @@ class _ProductScreenState extends State<ProductScreen> {
                         if (state.productapicallstate == ApiCallState.busy)
                           Expanded(
                             child: Center(
-                              child: CircularProgressIndicator(
-                                color: AppColors.primarycolor,
-                              ),
+                              child: Cm.showLoader(),
                             ),
                           )
                         else
@@ -347,7 +360,10 @@ class _ProductScreenState extends State<ProductScreen> {
                                         0,
                                     physics: NeverScrollableScrollPhysics(),
                                     shrinkWrap: true,
-                                    padding: .symmetric(horizontal:AppPadding.lg,vertical:AppPadding.sm),
+                                    padding: .symmetric(
+                                      horizontal: AppPadding.lg,
+                                      vertical: AppPadding.sm,
+                                    ),
                                     itemBuilder: (context, index) {
                                       return productItemCard(
                                         imageUrl: state
@@ -374,9 +390,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                     Padding(
                                       padding: EdgeInsets.all(AppPadding.md),
                                       child: Center(
-                                        child: CircularProgressIndicator(
-                                          color: AppColors.primarycolor,
-                                        ),
+                                        child: Cm.showLoader(),
                                       ),
                                     ),
                                 ],
@@ -444,6 +458,7 @@ class _ProductScreenState extends State<ProductScreen> {
       searchproducts.clear();
       isselectedsort = value;
       iscategoryselected = null;
+      hadFocusBeforeScroll = false;
       productbloc.add(FetchAllProductsEvent(sortBy: isselectedsort));
       FocusScope.of(context).unfocus();
       searchfocusnode.unfocus();
@@ -460,6 +475,7 @@ class _ProductScreenState extends State<ProductScreen> {
     } else {
       // apply new selection
       searchfocusnode.unfocus();
+      hadFocusBeforeScroll = false;
       searchproducts.clear();
       isselectedsort = '';
       iscategoryselected = productbloc.state.productcategorylist?[index];
@@ -477,6 +493,7 @@ class _ProductScreenState extends State<ProductScreen> {
     searchproducts.clear();
     isselectedsort = '';
     iscategoryselected = null;
+    hadFocusBeforeScroll = false;
     productbloc.add(FetchProductCategoryListEvent());
     productbloc.add(FetchAllProductsEvent());
     sortlistscrollController.animateTo(
@@ -495,7 +512,7 @@ class _ProductScreenState extends State<ProductScreen> {
       if (value != null) {
         Cm.showSnackBar(
           context,
-          message: '$value Added to cart',
+          message: '$value ${AppStrings.added_to_cart}',
           bg: AppColors.greencolor,
         );
         productbloc.add(FetchAllProductsEvent());

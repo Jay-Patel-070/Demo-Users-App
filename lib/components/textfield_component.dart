@@ -15,12 +15,14 @@ class TextfieldComponent extends StatelessWidget {
   final bool? showprefixicon;
   final TextInputType textinputtype;
   final FocusNode? focusnode;
+  final bool? enabled;
+  final int? maxLines;
   TextfieldComponent({
     this.ontap,
     this.controller,
     this.onFieldSubmitted,
     this.validator,
-    this.hinttext,
+    this.hinttext = 'Type here...',
     this.prefixicon,
     this.obsecuretext,
     this.suffixicon,
@@ -28,7 +30,9 @@ class TextfieldComponent extends StatelessWidget {
     this.suffixicontap,
     this.label,
     this.textinputtype = TextInputType.name,
-    this.focusnode
+    this.focusnode,
+    this.enabled = true,
+    this.maxLines
   });
 
   @override
@@ -72,6 +76,8 @@ class TextfieldComponent extends StatelessWidget {
           validator: validator,
           onFieldSubmitted: onFieldSubmitted,
           autovalidateMode: .onUserInteraction,
+          enabled: enabled,
+          maxLines: maxLines ?? 1,
         ),
       ],
     );

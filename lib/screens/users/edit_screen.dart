@@ -76,7 +76,7 @@ class _EditScreenState extends State<EditScreen> {
     return BlocListener<UsersBloc, UsersState>(
       bloc: usersBloc,
       listener: (context, state) {
-        if (state.usersapicallstate == ApiCallState.success) {
+        if (state.editusersapicallstate == ApiCallState.success) {
           sharedprefshelper.saveData(
             LocalStorageKeys.userData,
             jsonEncode(state.userresponse?.toJson()),
@@ -84,7 +84,7 @@ class _EditScreenState extends State<EditScreen> {
           userData = state.userresponse;
           Navigator.pop(context, true);
         }
-        if (state.usersapicallstate == ApiCallState.failure) {
+        if (state.editusersapicallstate == ApiCallState.failure) {
           Cm.showSnackBar(context, message: state.error.toString());
         }
       },
@@ -181,6 +181,8 @@ class _EditScreenState extends State<EditScreen> {
                         emailfocusnode,
                       );
                     },
+                    enabled: false,
+                    suffixicon: Icons.lock_outlined,
                   ),
                   sb(200),
                 ],
@@ -195,7 +197,7 @@ class _EditScreenState extends State<EditScreen> {
               child: ButtonComponent(
                 ontap: onTapSaveChanges,
                 buttontitle: AppLabels.save_changes,
-                isloading: state.usersapicallstate == ApiCallState.busy
+                isloading: state.editusersapicallstate == ApiCallState.busy
                     ? true
                     : false,
               ),

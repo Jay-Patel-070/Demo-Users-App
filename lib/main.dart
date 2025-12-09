@@ -3,6 +3,7 @@ import 'package:demo_users_app/helper/shared_preference_helper.dart';
 import 'package:demo_users_app/http/internet_bloc/internet_bloc.dart';
 import 'package:demo_users_app/http/internet_bloc/internet_state.dart';
 import 'package:demo_users_app/screens/auth/splash_screen.dart';
+import 'package:demo_users_app/screens/notification/notification_service.dart';
 import 'package:demo_users_app/screens/theme/bloc/theme_bloc.dart';
 import 'package:demo_users_app/screens/theme/bloc/theme_mode.dart';
 import 'package:demo_users_app/screens/theme/bloc/theme_state.dart';
@@ -18,14 +19,30 @@ ThemeBloc themeBloc = ThemeBloc();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await NotificationService().init();
   await sharedprefshelper.init();
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  final InternetBloc internetBloc = InternetBloc();
+class MyApp extends StatefulWidget {
 
   MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final InternetBloc internetBloc = InternetBloc();
+
+  @override
+  void initState() {
+    super.initState();
+    // 4. Handle navigation immediately after the initial build is complete
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      NotificationService().handleInitialNavigation();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 extension StringCasingExtension on String {
   /// Capitalizes the first letter of the string.
@@ -79,4 +80,22 @@ extension isNotNullandEmptyExtension on String? {
   bool isNotNullOrEmpty() {
     return this != null && this!.isNotEmpty;
   }
+}
+
+extension DateTimeFormattingExtension on DateTime {
+  /// Returns formatted date like "05 Dec 2025"
+  String toDateString() {
+    return DateFormat('dd MMMM yyyy').format(this);
+  }
+
+  /// Returns formatted time like "10:45 AM"
+  String toTimeString() {
+    return DateFormat('hh:mm a').format(this);
+  }
+
+  /// Returns both date + time → "05 Dec 2025  10:45 AM"
+  String toDateTimeString() {
+    return "${toDateString()}  ${toTimeString()}";
+  }
+
 }

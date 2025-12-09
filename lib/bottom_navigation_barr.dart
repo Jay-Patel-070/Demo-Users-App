@@ -5,25 +5,33 @@ import 'package:demo_users_app/utils/utils.dart';
 import 'package:flutter/material.dart';
 
 class BottomNavigationBarr extends StatefulWidget {
-  const BottomNavigationBarr({super.key});
+  final bool? isfromnotificationtap;
+  const BottomNavigationBarr({super.key,this.isfromnotificationtap});
 
   @override
   State<BottomNavigationBarr> createState() => _BottomNavigationBarrState();
 }
 
 class _BottomNavigationBarrState extends State<BottomNavigationBarr> {
-  final List screens = [
-    AllUserScreen(),
-    ProductScreen(),
-    SettingsScreen(),
-  ];
+  late List screens;
 
-  int _selectedIndex = 0;
+  int _selectedIndex = 1;
 
   _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    screens = [
+      AllUserScreen(),
+      ProductScreen(isfromnotificationtap: widget.isfromnotificationtap,),
+      SettingsScreen(),
+    ];
+    super.initState();
   }
 
   @override
@@ -39,33 +47,41 @@ class _BottomNavigationBarrState extends State<BottomNavigationBarr> {
             ),
           )
         ),
-        child: BottomNavigationBar(
-            items:<BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                icon: Icon(Icons.group_outlined),
-                label: AppLabels.users,
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.inventory_2_outlined),
-                label: AppLabels.products,
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.settings_outlined),
-                label: AppLabels.settings,
-              ),
-            ],
-          currentIndex: _selectedIndex,
-          onTap: _onItemTapped,
-          unselectedItemColor: AppColors.greywithshade,
-          selectedItemColor: AppColors.primarycolor,
-          type: BottomNavigationBarType.fixed,
-          selectedFontSize: AppFontSizes.md,
-          unselectedFontSize: AppFontSizes.md,
-          unselectedLabelStyle: TextStyle(
-            fontFamily: Appfonts.robotomedium
+        child: Theme(
+          data: Theme.of(context).copyWith(
+            splashColor: AppColors.transparent,
+            highlightColor: AppColors.transparent,
+            hoverColor: AppColors.transparent,
+            splashFactory: NoSplash.splashFactory,
           ),
-          selectedLabelStyle: TextStyle(
-            fontFamily: Appfonts.robotobold
+          child: BottomNavigationBar(
+              items:<BottomNavigationBarItem>[
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.group_outlined),
+                  label: AppLabels.users,
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.inventory_2_outlined),
+                  label: AppLabels.products,
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.settings_outlined),
+                  label: AppLabels.settings,
+                ),
+              ],
+            currentIndex: _selectedIndex,
+            onTap: _onItemTapped,
+            unselectedItemColor: AppColors.greywithshade,
+            selectedItemColor: AppColors.primarycolor,
+            type: BottomNavigationBarType.fixed,
+            selectedFontSize: AppFontSizes.md,
+            unselectedFontSize: AppFontSizes.md,
+            unselectedLabelStyle: TextStyle(
+              fontFamily: Appfonts.robotomedium
+            ),
+            selectedLabelStyle: TextStyle(
+              fontFamily: Appfonts.robotobold
+            ),
           ),
         ),
       )

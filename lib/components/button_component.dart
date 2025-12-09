@@ -6,7 +6,8 @@ class ButtonComponent extends StatelessWidget {
   final VoidCallback ontap;
   final bool? isloading;
   final Color? bgcolor;
-  const ButtonComponent({super.key,required this.ontap,required this.buttontitle,this.isloading,this.bgcolor});
+  final double? width;
+  const ButtonComponent({super.key,required this.ontap,required this.buttontitle,this.isloading,this.bgcolor,this.width});
 
   @override
   Widget build(BuildContext context) {
@@ -15,8 +16,7 @@ class ButtonComponent extends StatelessWidget {
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: bgcolor ?? AppColors.primarycolor,
-          padding: .symmetric(vertical:AppPadding.sm),
-          minimumSize: Size(double.infinity,0),
+          minimumSize: Size(width ?? double.infinity,45),
           shape: RoundedRectangleBorder(
             borderRadius: .circular(AppRadius.md),
           ),

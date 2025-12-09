@@ -1,6 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
-import '../../../utils/utils.dart'; // Path where AppColors is
 import 'theme_event.dart';
 import 'theme_state.dart';
 

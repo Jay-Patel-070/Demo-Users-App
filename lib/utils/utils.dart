@@ -2,43 +2,20 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
-// class AppColors {
-//   static Color primarycolor = Color(0xFF4A90E2);
-//   static Color secondarycolor = Color(0x964A90E2);
-//   static const Color greywithshade = Color.fromRGBO(117, 117, 117, 1);
-//   static const Color greywithshade2 = Color.fromRGBO(231, 226, 226, 1.0);
-//   static Color whitecolor = Colors.white;
-//   static const Color greencolor = Colors.green;
-//   static const Color transparent = Colors.transparent;
-//   static Color blackcolor = Colors.black;
-//   static Color greycolor = Colors.grey;
-//   static const Color redcolor = Colors.red;
-//   static const Color redwithshade = Color(0xFF8B0000);
-//   static Color bordercolor = Colors.grey;
-//   static Color rating = Colors.amber;
-// }
-
 class AppColors {
-  // These values will change from ThemeBloc
-  static Color primarycolor = const Color(0xFF4A90E2);
-  static Color secondarycolor = const Color(0x964A90E2);
-
-  static Color greywithshade = const Color.fromRGBO(117, 117, 117, 1);
-  static Color greywithshade2 = const Color.fromRGBO(231, 226, 226, 1.0);
-
+  static Color primarycolor = Color(0xFF4A90E2);
+  static Color secondarycolor = Color(0x964A90E2);
+  static const Color greywithshade = Color.fromRGBO(117, 117, 117, 1);
+  static const Color greywithshade2 = Color.fromRGBO(231, 226, 226, 1.0);
   static Color whitecolor = Colors.white;
+  static const Color greencolor = Colors.green;
+  static const Color transparent = Colors.transparent;
   static Color blackcolor = Colors.black;
-
   static Color greycolor = Colors.grey;
-
+  static const Color redcolor = Colors.red;
+  static const Color redwithshade = Color(0xFF8B0000);
   static Color bordercolor = Colors.grey;
   static Color rating = Colors.amber;
-
-  // THESE 2 WON’T CHANGE
-  static const Color greencolor = Colors.green;
-  static const Color redcolor = Colors.red;
-  static const Color transparent = Colors.transparent;
-  static const Color redwithshade = Color(0xFF8B0000);
 }
 
 class AppLabels {
@@ -78,6 +55,27 @@ class AppLabels {
   static const String product_description = "Product Description";
   static const String stock = "Stock";
   static const String sku = "SKU";
+  static const String weight = "Weight";
+  static const String discount = "Discount";
+  static const String warranty = "Warranty";
+  static const String shipping = "Shipping";
+  static const String return_policy = "Return Policy";
+  static const String dimensions = "Dimensions";
+  static const String width = "Width";
+  static const String height = "Height";
+  static const String depth = "Depth";
+  static const String reviews = "Reviews";
+  static const String light = 'Light';
+  static const String dark = 'Dark';
+  static const String cancel = 'Cancel';
+  static const String notifications = 'Notifications';
+  static const String scheduled = 'Scheduled';
+  static const String direct = 'Direct';
+  static const String schedule_notification = 'Schedule Notification';
+  static const String direct_notification = 'Direct Notification';
+  static const String title = 'Title';
+  static const String description = 'Description';
+  static const String submit = 'Submit';
 }
 
 class AppStrings {
@@ -100,6 +98,14 @@ class AppStrings {
   static const String user_details_updated_successfully = 'User details updated successfully';
   static const String no_changes_made_to_user_details = 'No changes made to user details';
   static const String error_fetching_product_details = 'Error fetching product details';
+  static const String logout_confirmation = 'Logout Confirmation';
+  static const String are_you_sure_you_want_to_log_out = 'Are you sure you want to log out?';
+  static const String you_will_need_to_sign_in_again_to_access_your_account = 'You will need to sign in again to access your account.';
+  static const String scheduled_date = 'Scheduled Date :';
+  static const String notification_scheduled_on = "Notification scheduled on";
+  static const String select_date = "Select Date";
+  static const String select_time = "Select Time";
+  static const String added_to_cart = "Added to cart";
 }
 
 class Appfonts {
@@ -114,6 +120,7 @@ class LocalStorageKeys {
   static const String accessToken = "accessToken";
   static const String refreshToken = "refreshToken";
   static const String userData = "userData";
+  static const String notifications = "notifications";
 }
 
 class AppFontSizes {

@@ -55,7 +55,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           return Scaffold(
             appBar: PreferredSize(preferredSize: Size(double.infinity, 50), child: AppbarComponent(title: AppLabels.product_details,centertitle: true,)),
             body: state.productapicallstate == ApiCallState.busy
-                ? Center(child: CircularProgressIndicator(color: AppColors.primarycolor,))
+                ? Center(child: Cm.showLoader())
                 : ListView(
                     padding: .symmetric(horizontal: 16),
                     children: [
@@ -148,49 +148,49 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               state.productdetailsmodel?.sku ?? '',
                             ),
                             infoRow(
-                              "Weight",
+                              AppLabels.weight,
                               "${state.productdetailsmodel?.weight}",
                             ),
                             infoRow(
-                              "Discount",
+                              AppLabels.discount,
                               "${state.productdetailsmodel?.discountPercentage}%",
                             ),
                             infoRow(
-                              "Warranty",
+                              AppLabels.warranty,
                               "${state.productdetailsmodel?.warrantyInformation}",
                             ),
                             infoRow(
-                              "Shipping",
+                              AppLabels.shipping,
                               "${state.productdetailsmodel?.shippingInformation}",
                             ),
                             infoRow(
-                              "Return Policy",
+                              AppLabels.return_policy,
                               "${state.productdetailsmodel?.returnPolicy}",
                             ),
                           ],
                         ),
                       ),
                       expansionTileSection(
-                        title: "Dimensions",
+                        title: AppLabels.dimensions,
                         content: Column(
                           children: [
                             infoRow(
-                              "Width",
+                              AppLabels.width,
                               "${state.productdetailsmodel?.dimensions?.width}",
                             ),
                             infoRow(
-                              "Height",
+                              AppLabels.height,
                               "${state.productdetailsmodel?.dimensions?.height}",
                             ),
                             infoRow(
-                              "Depth",
+                              AppLabels.depth,
                               "${state.productdetailsmodel?.dimensions?.depth}",
                             ),
                           ],
                         ),
                       ),
                       expansionTileSection(
-                        title: "Reviews",
+                        title: AppLabels.reviews,
                         content: ListView.builder(
                           itemCount:
                               state.productdetailsmodel?.reviews?.length ?? 0,

@@ -15,116 +15,127 @@ class UserProfileScreen extends StatefulWidget {
 class _UserProfileScreenState extends State<UserProfileScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(50),
-        child: AppbarComponent(
-          centertitle: true,
-          title: AppLabels.user_details,
-          actions: [
-            TextButton(
-              onPressed: () {
-                callNextScreenWithResult(context, EditScreen()).then((value) {
-                  if (value == true) {
-                    Cm.showSnackBar(
-                      context,
-                      message: AppStrings.user_details_updated_successfully,
-                      bg: AppColors.greencolor,
-                    );
-                    setState(() {});
-                  } else {
-                    Cm.showSnackBar(
-                      context,
-                      message: AppStrings.no_changes_made_to_user_details,
-                      bg: AppColors.greycolor,
-                    );
-                  }
-                });
-              },
-              child: Text(
-                AppLabels.edit,
-                style: TextStyle(
-                  color: AppColors.primarycolor,
-                  fontSize: AppFontSizes.xl,
-                  fontFamily: Appfonts.robotobold,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop) {
+          Navigator.pop(context, true);   // return true to previous screen
+        }
+      },
+      child: Scaffold(
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(50),
+          child: AppbarComponent(
+            centertitle: true,
+            title: AppLabels.user_details,
+            leading: IconButton(onPressed: () {
+              Navigator.pop(context,true);
+            }, icon: Icon(Icons.arrow_back)),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  callNextScreenWithResult(context, EditScreen()).then((value) {
+                    if (value == true) {
+                      Cm.showSnackBar(
+                        context,
+                        message: AppStrings.user_details_updated_successfully,
+                        bg: AppColors.greencolor,
+                      );
+                      setState(() {});
+                    } else {
+                      Cm.showSnackBar(
+                        context,
+                        message: AppStrings.no_changes_made_to_user_details,
+                        bg: AppColors.greycolor,
+                      );
+                    }
+                  });
+                },
+                child: Text(
+                  AppLabels.edit,
+                  style: TextStyle(
+                    color: AppColors.primarycolor,
+                    fontSize: AppFontSizes.xl,
+                    fontFamily: Appfonts.robotobold,
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.all(AppPadding.lg),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(
-                  child: Column(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: AppColors.greywithshade.withValues(alpha: 0.2),
-                            width: 2,
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.all(AppPadding.lg),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                    child: Column(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: AppColors.greywithshade.withValues(alpha: 0.2),
+                              width: 2,
+                            ),
+                          ),
+                          child: CircleAvatar(
+                            radius: 60,
+                            backgroundColor: AppColors.whitecolor,
+                            backgroundImage: NetworkImage("${userData?.image}"),
                           ),
                         ),
-                        child: CircleAvatar(
-                          radius: 60,
-                          backgroundColor: AppColors.whitecolor,
-                          backgroundImage: NetworkImage("${userData?.image}"),
+                        sb(20),
+                        Text(
+                          '${userData?.firstName} ${userData?.lastName}',
+                          style: TextStyle(
+                            fontSize: AppFontSizes.xl,
+                            fontFamily: Appfonts.robotobold,
+                          ),
                         ),
+                        Text(
+                          '${userData?.email}',
+                          style: TextStyle(
+                            color: AppColors.greycolor,
+                            fontSize: AppFontSizes.lg,
+                            fontFamily: Appfonts.roboto,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  sb(20),
+                  Column(
+                    children: [
+                      UserDetailTile(
+                        icon: Icons.person_outline,
+                        title: AppLabels.full_name,
+                        subtitle: '${userData?.firstName} ${userData?.lastName}',
                       ),
                       sb(20),
-                      Text(
-                        '${userData?.firstName} ${userData?.lastName}',
-                        style: TextStyle(
-                          fontSize: AppFontSizes.xl,
-                          fontFamily: Appfonts.robotobold,
-                        ),
+                      UserDetailTile(
+                        icon: Icons.tag,
+                        title: AppLabels.user_name,
+                        subtitle: '${userData?.username}',
                       ),
-                      Text(
-                        '${userData?.email}',
-                        style: TextStyle(
-                          color: AppColors.greycolor,
-                          fontSize: AppFontSizes.lg,
-                          fontFamily: Appfonts.roboto,
-                        ),
+                      sb(20),
+                      UserDetailTile(
+                        icon: Icons.wc_outlined,
+                        title: AppLabels.gender,
+                        subtitle: '${userData?.gender}',
+                      ),
+                      sb(20),
+                      UserDetailTile(
+                        icon: Icons.email_outlined,
+                        title: AppLabels.email,
+                        subtitle: '${userData?.email}',
                       ),
                     ],
                   ),
-                ),
-                sb(20),
-                Column(
-                  children: [
-                    UserDetailTile(
-                      icon: Icons.person_outline,
-                      title: AppLabels.full_name,
-                      subtitle: '${userData?.firstName} ${userData?.lastName}',
-                    ),
-                    sb(20),
-                    UserDetailTile(
-                      icon: Icons.tag,
-                      title: AppLabels.user_name,
-                      subtitle: '${userData?.username}',
-                    ),
-                    sb(20),
-                    UserDetailTile(
-                      icon: Icons.wc_outlined,
-                      title: AppLabels.gender,
-                      subtitle: '${userData?.gender}',
-                    ),
-                    sb(20),
-                    UserDetailTile(
-                      icon: Icons.email_outlined,
-                      title: AppLabels.email,
-                      subtitle: '${userData?.email}',
-                    ),
-                  ],
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

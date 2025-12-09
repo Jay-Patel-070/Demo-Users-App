@@ -103,6 +103,10 @@ class Cm {
     return null;
   }
 
+  static Widget showLoader() {
+    return CircularProgressIndicator(color: AppColors.primarycolor,);
+  }
+
   static void showSnackBar(
     BuildContext context, {
     required String message,

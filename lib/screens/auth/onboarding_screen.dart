@@ -55,15 +55,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           children: [
             Align(
               alignment: Alignment.topRight,
-              child: SizedBox(
+              child: ButtonComponent(
+                ontap: () {
+                  callNextScreenAndClearStack(context, LoginScreen());
+                },
+                buttontitle: AppLabels.skip,
+                bgcolor: AppColors.primarycolor,
                 width: 60,
-                child: ButtonComponent(
-                  ontap: () {
-                    callNextScreenAndClearStack(context, LoginScreen());
-                  },
-                  buttontitle: AppLabels.skip,
-                  bgcolor: AppColors.primarycolor,
-                ),
               ).withPadding(padding: EdgeInsets.symmetric(horizontal: 20)),
             ),
             Expanded(
@@ -79,17 +77,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 AnimatedOpacity(
                   duration: Duration(milliseconds: 300),
                   opacity: _currentPageIndex == 0 ? 0 : 1,
-                  child: SizedBox(
+                  child: ButtonComponent(
+                    ontap: () {
+                      if (_currentPageIndex > 0) {
+                        _updateCurrentPageIndex(_currentPageIndex - 1);
+                      }
+                    },
+                    buttontitle: AppLabels.previous,
+                    bgcolor: AppColors.greywithshade.withOpacity(0.2),
                     width: 80,
-                    child: ButtonComponent(
-                      ontap: () {
-                        if (_currentPageIndex > 0) {
-                          _updateCurrentPageIndex(_currentPageIndex - 1);
-                        }
-                      },
-                      buttontitle: AppLabels.previous,
-                      bgcolor: AppColors.greywithshade.withOpacity(0.2),
-                    ),
                   ),
                 ),
                 Indicator(
@@ -101,16 +97,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   opacity: _currentPageIndex == pageviewchildren.length - 1
                       ? 0
                       : 1,
-                  child: SizedBox(
+                  child: ButtonComponent(
+                    ontap: () {
+                      if (_currentPageIndex < pageviewchildren.length - 1) {
+                        _updateCurrentPageIndex(_currentPageIndex + 1);
+                      }
+                    },
+                    buttontitle: AppLabels.next,
                     width: 60,
-                    child: ButtonComponent(
-                      ontap: () {
-                        if (_currentPageIndex < pageviewchildren.length - 1) {
-                          _updateCurrentPageIndex(_currentPageIndex + 1);
-                        }
-                      },
-                      buttontitle: AppLabels.next,
-                    ),
                   ),
                 ),
               ],

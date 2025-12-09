@@ -8,6 +8,7 @@ class SearchbarComponent extends StatelessWidget {
   final ValueChanged<String>? onChanged;
   final VoidCallback? onClear;
   final FocusNode? focusNode;
+  final bool? readOnly;
 
   const SearchbarComponent({
     super.key,
@@ -15,7 +16,8 @@ class SearchbarComponent extends StatelessWidget {
     this.hintText = AppStrings.Search,
     this.onChanged,
     this.onClear,
-    this.focusNode
+    this.focusNode,
+    this.readOnly
   });
 
   @override
@@ -42,6 +44,8 @@ class SearchbarComponent extends StatelessWidget {
               suffixIcon:  value.text.isNotEmpty ? IconButton(onPressed: onClear, icon: Icon(Icons.close, color: AppColors.greywithshade,fontWeight: FontWeight.w500) ) : null
           ),
           cursorColor: AppColors.primarycolor,
+          // readOnly: readOnly ?? false,
+          // autofocus: true,
         );
       },
     );

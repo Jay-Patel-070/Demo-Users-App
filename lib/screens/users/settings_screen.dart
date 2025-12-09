@@ -48,14 +48,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print('rebuild');
     return BlocListener<UsersBloc, UsersState>(
       bloc: usersBloc,
       listener: (context, state) {
         if (state.usersapicallstate == ApiCallState.success) {
-          // sharedprefshelper.saveData(
-          //   LocalStorageKeys.userData,
-          //   jsonEncode(state.userresponse?.toJson()),
-          // );
+          sharedprefshelper.saveData(
+            LocalStorageKeys.userData,
+            jsonEncode(state.userresponse?.toJson()),
+          );
           userData = state.userresponse;
         }
         if (state.usersapicallstate == ApiCallState.failure) {
@@ -71,7 +72,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           bloc: usersBloc,
           builder: (context, state) {
             if (state.usersapicallstate == ApiCallState.busy || userData == null) {
-              return Center(child: CircularProgressIndicator());
+              return Center(child: Cm.showLoader());
             }
             return Padding(
               padding: EdgeInsets.symmetric(
@@ -116,7 +117,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         ),
                       ],
                     ).onTapEvent(() {
-                      callNextScreen(context, UserProfileScreen());
+                      callNextScreenWithResult(context, UserProfileScreen()).then((value) {
+                        if(value == true){
+                          setState(() {});
+                        }
+                      },);
                     },),
                   ),
                   sb(20),
@@ -136,7 +141,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         bgcolor: AppColors.whitecolor,
                         bordercolor: AppColors.blackcolor,
                         isSelected: isselected == 0 ? true : false,
-                        title: 'Light',
+                        title: AppLabels.light,
                       ).onTapEvent(() {
                         themeBloc.add(SetThemeEvent(ThemeMode.light));
                         setState(() {
@@ -149,7 +154,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           alpha: 0.5,
                         ),
                         isSelected: isselected == 1 ? true : false,
-                        title: 'Dark',
+                        title: AppLabels.dark,
                       ).onTapEvent(() {
                         themeBloc.add(SetThemeEvent(ThemeMode.dark));
                         setState(() {
@@ -162,7 +167,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             ? AppColors.blackcolor
                             : AppColors.whitecolor.withValues(alpha: 0.5),
                         isSelected: isselected == 2 ? true : false,
-                        title: 'System',
+                        title: AppLabels.system,
                       ).onTapEvent(() {
                         themeBloc.add(SetThemeEvent(ThemeMode.system));
                         setState(() {
@@ -287,47 +292,42 @@ class _SettingsScreenState extends State<SettingsScreen> {
       context: context,
       barrierDismissible: false,
       builder: (BuildContext dialogContext) {
-        return AlertDialog(
-          titlePadding: .only(left:AppPadding.lg,right:AppPadding.lg,top:AppPadding.md),
-          actionsPadding: .symmetric(horizontal:AppPadding.lg,vertical: AppPadding.md),
-          contentPadding: .symmetric(horizontal:AppPadding.lg,vertical: AppPadding.sm),
-          title: Text('Logout Confirmation'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text('Are you sure you want to log out?'),
-                sb(5),
-                Text('You will need to sign in again to access your account.'),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SizedBox(
-                  width: 70,
-                  height: 40,
-                  child: ButtonComponent(ontap: () {
-                    Navigator.of(dialogContext).pop();
-                  }, buttontitle: 'Cancel'),
-                ),
-                SizedBox(
-                  width: 70,
-                  height: 40,
-                  child: ButtonComponent(ontap: () {
-                    sharedprefshelper.clearAllData();
-                    callNextScreenAndClearStack(context, LoginScreen());
-                  }, buttontitle: 'Logout',bgcolor: AppColors.redcolor,),
-                ),
-              ],
-            )
-
-          ],
-        );
+        return alertDialogWidget(dialogContext);
       },
     );
+  }
 
+  Widget alertDialogWidget(BuildContext dialogContext) {
+    return AlertDialog(
+        titlePadding: .only(left:AppPadding.xl,right: AppPadding.xl,top:AppPadding.xl,bottom:AppPadding.md),
+        actionsPadding: .symmetric(horizontal:AppPadding.xl,vertical: AppPadding.md),
+        contentPadding: .symmetric(horizontal:AppPadding.xl,vertical: AppPadding.sm),
+        title: Text(AppStrings.logout_confirmation),
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: <Widget>[
+              Text(AppStrings.are_you_sure_you_want_to_log_out),
+              sb(8),
+              Text(AppStrings.you_will_need_to_sign_in_again_to_access_your_account),
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              ButtonComponent(ontap: () {
+                Navigator.of(dialogContext).pop();
+              }, buttontitle: AppLabels.cancel,width: 100,),
+              ButtonComponent(ontap: () {
+                sharedprefshelper.clearAllData();
+                callNextScreenAndClearStack(context, LoginScreen());
+              }, buttontitle: AppLabels.logout,bgcolor: AppColors.redcolor,width: 90,),
+            ],
+          )
+
+        ],
+      );
   }
 
   Widget tile({
