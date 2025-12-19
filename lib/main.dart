@@ -1,4 +1,5 @@
 import 'package:demo_users_app/cm.dart';
+import 'package:demo_users_app/helper/hive_helper.dart';
 import 'package:demo_users_app/helper/shared_preference_helper.dart';
 import 'package:demo_users_app/http/internet_bloc/internet_bloc.dart';
 import 'package:demo_users_app/http/internet_bloc/internet_state.dart';
@@ -11,6 +12,8 @@ import 'package:demo_users_app/screens/users/model/user_response.dart';
 import 'package:demo_users_app/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive/hive.dart';
+import 'package:path_provider/path_provider.dart';
 
 final SharedPrefsHelper sharedprefshelper = SharedPrefsHelper();
 UserResponse? userData;
@@ -20,6 +23,7 @@ ThemeBloc themeBloc = ThemeBloc();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await NotificationService().init();
+  await HiveHelper.init();
   await sharedprefshelper.init();
   runApp(MyApp());
 }

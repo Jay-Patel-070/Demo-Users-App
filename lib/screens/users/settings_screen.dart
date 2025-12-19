@@ -1,24 +1,24 @@
 import 'dart:convert';
+import 'package:demo_users_app/boxes/boxes.dart';
 import 'package:demo_users_app/cm.dart';
 import 'package:demo_users_app/components/appbar_component.dart';
 import 'package:demo_users_app/components/button_component.dart';
-import 'package:demo_users_app/components/user_listtile_component.dart';
 import 'package:demo_users_app/extension.dart';
+import 'package:demo_users_app/helper/hive_helper.dart';
 import 'package:demo_users_app/helper/shared_preference_helper.dart';
 import 'package:demo_users_app/main.dart';
 import 'package:demo_users_app/screens/auth/login_screen.dart';
-import 'package:demo_users_app/screens/theme/bloc/theme_bloc.dart';
 import 'package:demo_users_app/screens/theme/bloc/theme_event.dart';
-import 'package:demo_users_app/screens/theme/bloc/theme_state.dart';
 import 'package:demo_users_app/screens/users/bloc/users_bloc.dart';
 import 'package:demo_users_app/screens/users/bloc/users_event.dart';
 import 'package:demo_users_app/screens/users/bloc/users_state.dart';
 import 'package:demo_users_app/screens/users/data/user_datasource.dart';
+import 'package:demo_users_app/screens/users/model/user_response.dart';
 import 'package:demo_users_app/screens/users/user_profile_screen.dart';
 import 'package:demo_users_app/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:hive/hive.dart';
 import 'data/user_datarepository.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -40,9 +40,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   void initState() {
-    // if (userData == null) {
+    if (userData == null) {
       usersBloc.add(FetchAuthUserEvent());
-    // }
+    }
     super.initState();
   }
 
@@ -53,10 +53,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
       bloc: usersBloc,
       listener: (context, state) {
         if (state.usersapicallstate == ApiCallState.success) {
-          sharedprefshelper.saveData(
-            LocalStorageKeys.userData,
-            jsonEncode(state.userresponse?.toJson()),
-          );
+          // sharedprefshelper.saveData(
+          //   LocalStorageKeys.userData,
+          //   jsonEncode(state.userresponse?.toJson()),
+          // );
+          HiveHelper.userBox.put(HiveLocalStorageKeys.userData,state.userresponse!);
           userData = state.userresponse;
         }
         if (state.usersapicallstate == ApiCallState.failure) {
@@ -319,7 +320,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ButtonComponent(ontap: () {
                 Navigator.of(dialogContext).pop();
               }, buttontitle: AppLabels.cancel,width: 100,),
-              ButtonComponent(ontap: () {
+              ButtonComponent(ontap: () async{
+                await HiveHelper.clearUserData();
                 sharedprefshelper.clearAllData();
                 callNextScreenAndClearStack(context, LoginScreen());
               }, buttontitle: AppLabels.logout,bgcolor: AppColors.redcolor,width: 90,),

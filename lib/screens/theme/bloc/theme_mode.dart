@@ -5,7 +5,7 @@ class AppTheme {
   static final ThemeData light = ThemeData(
     brightness: Brightness.light,
     scaffoldBackgroundColor: AppColors.whitecolor,
-    appBarTheme: AppBarTheme(backgroundColor: AppColors.whitecolor),
+    appBarTheme: AppBarTheme(backgroundColor: AppColors.whitecolor,surfaceTintColor: AppColors.transparent,),
     iconTheme: IconThemeData(color: AppColors.blackcolor),
     inputDecorationTheme: InputDecorationTheme(
       fillColor: AppColors.greywithshade.withValues(alpha: 0.2),
@@ -52,11 +52,12 @@ class AppTheme {
     snackBarTheme: SnackBarThemeData(
       contentTextStyle: TextStyle(color: AppColors.whitecolor),
     ),
+    cardTheme: CardThemeData(color: AppColors.whitecolor),
   );
   static final ThemeData dark = ThemeData(
     brightness: Brightness.dark,
     scaffoldBackgroundColor: AppColors.blackcolor,
-    appBarTheme: AppBarTheme(backgroundColor: AppColors.blackcolor),
+    appBarTheme: AppBarTheme(backgroundColor: AppColors.blackcolor,surfaceTintColor: AppColors.transparent),
     iconTheme: IconThemeData(color: AppColors.whitecolor),
     inputDecorationTheme: InputDecorationTheme(
       fillColor: AppColors.greywithshade.withValues(alpha: 0.2),
@@ -111,6 +112,9 @@ class AppTheme {
     ),
     snackBarTheme: SnackBarThemeData(
       contentTextStyle: TextStyle(color: AppColors.whitecolor),
+    ),
+    cardTheme: CardThemeData(
+      color: AppColors.greywithshade.withValues(alpha: 0.2),
     ),
   );
 }

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:demo_users_app/boxes/boxes.dart';
 import 'package:demo_users_app/components/appbar_component.dart';
 import 'package:demo_users_app/components/button_component.dart';
 import 'package:demo_users_app/main.dart';
@@ -8,11 +9,14 @@ import 'package:demo_users_app/screens/users/bloc/users_event.dart';
 import 'package:demo_users_app/screens/users/bloc/users_state.dart';
 import 'package:demo_users_app/screens/users/data/user_datarepository.dart';
 import 'package:demo_users_app/screens/users/data/user_datasource.dart';
+import 'package:demo_users_app/screens/users/model/user_response.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive/hive.dart';
 
 import '../../cm.dart';
 import '../../components/textfield_component.dart';
+import '../../helper/hive_helper.dart';
 import '../../utils/utils.dart';
 
 class EditScreen extends StatefulWidget {
@@ -77,10 +81,11 @@ class _EditScreenState extends State<EditScreen> {
       bloc: usersBloc,
       listener: (context, state) {
         if (state.editusersapicallstate == ApiCallState.success) {
-          sharedprefshelper.saveData(
-            LocalStorageKeys.userData,
-            jsonEncode(state.userresponse?.toJson()),
-          );
+          // sharedprefshelper.saveData(
+          //   LocalStorageKeys.userData,
+          //   jsonEncode(state.userresponse?.toJson()),
+          // );
+          HiveHelper.userBox.put(HiveLocalStorageKeys.userData,state.userresponse!);
           userData = state.userresponse;
           Navigator.pop(context, true);
         }
@@ -99,108 +104,116 @@ class _EditScreenState extends State<EditScreen> {
                 centertitle: true,
               ),
             ),
-            body: Form(
-              key: _formkey,
-              child: ListView(
-                padding: EdgeInsets.symmetric(horizontal: AppPadding.lg),
-                children: [
-                  sb(20),
-                  TextfieldComponent(
-                    focusnode: firstnamefocusnode,
-                    label: AppLabels.first_name,
-                    controller: firstnamecontroller,
-                    textinputtype: TextInputType.name,
-                    onFieldSubmitted: (_) {
-                      FocusScope.of(context).requestFocus(lastnamefocusnode);
-                    },
-                    validator: (value) {
-                      return Cm.validate(
-                        value,
-                        AppLabels.first_name,
-                        firstnamefocusnode,
-                      );
-                    },
+            body: Stack(
+              children: [
+                Form(
+                  key: _formkey,
+                  child: ListView(
+                    padding: EdgeInsets.symmetric(horizontal: AppPadding.lg),
+                    children: [
+                      sb(20),
+                      TextfieldComponent(
+                        focusnode: firstnamefocusnode,
+                        label: AppLabels.first_name,
+                        controller: firstnamecontroller,
+                        textinputtype: TextInputType.name,
+                        onFieldSubmitted: (_) {
+                          FocusScope.of(context).requestFocus(lastnamefocusnode);
+                        },
+                        validator: (value) {
+                          return Cm.validate(
+                            value,
+                            AppLabels.first_name,
+                            firstnamefocusnode,
+                          );
+                        },
+                      ),
+                      sb(20),
+                      TextfieldComponent(
+                        focusnode: lastnamefocusnode,
+                        label: AppLabels.last_name,
+                        controller: lastnamecontroller,
+                        textinputtype: TextInputType.name,
+                        onFieldSubmitted: (_) {
+                          FocusScope.of(context).requestFocus(agefocusnode);
+                        },
+                        validator: (value) {
+                          return Cm.validate(
+                            value,
+                            AppLabels.last_name,
+                            lastnamefocusnode,
+                          );
+                        },
+                      ),
+                      sb(20),
+                      TextfieldComponent(
+                        focusnode: agefocusnode,
+                        label: AppLabels.age,
+                        controller: agecontroller,
+                        textinputtype: TextInputType.number,
+                        onFieldSubmitted: (_) {
+                          FocusScope.of(context).requestFocus(genderfocusnode);
+                        },
+                        validator: (value) {
+                          return Cm.validate(value, AppLabels.age, agefocusnode);
+                        },
+                      ),
+                      sb(20),
+                      TextfieldComponent(
+                        focusnode: genderfocusnode,
+                        label: AppLabels.gender,
+                        controller: gendercontroller,
+                        textinputtype: TextInputType.name,
+                        onFieldSubmitted: (_) {
+                          FocusScope.of(context).requestFocus(emailfocusnode);
+                        },
+                        validator: (value) {
+                          return Cm.validate(
+                            value,
+                            AppLabels.gender,
+                            genderfocusnode,
+                          );
+                        },
+                      ),
+                      sb(20),
+                      TextfieldComponent(
+                        focusnode: emailfocusnode,
+                        label: AppLabels.email,
+                        controller: emailcontroller,
+                        textinputtype: TextInputType.emailAddress,
+                        validator: (value) {
+                          return Cm.validate(
+                            value,
+                            AppLabels.email,
+                            emailfocusnode,
+                          );
+                        },
+                        enabled: false,
+                        suffixicon: Icons.lock_outlined,
+                      ),
+                      sb(200),
+                    ],
                   ),
-                  sb(20),
-                  TextfieldComponent(
-                    focusnode: lastnamefocusnode,
-                    label: AppLabels.last_name,
-                    controller: lastnamecontroller,
-                    textinputtype: TextInputType.name,
-                    onFieldSubmitted: (_) {
-                      FocusScope.of(context).requestFocus(agefocusnode);
-                    },
-                    validator: (value) {
-                      return Cm.validate(
-                        value,
-                        AppLabels.last_name,
-                        lastnamefocusnode,
-                      );
-                    },
+                ),
+                Positioned(
+                  bottom: 0,
+                right: 0,
+                left: 0,
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    left: AppPadding.lg,
+                    right: AppPadding.lg,
+                    bottom: AppPadding.lg,
                   ),
-                  sb(20),
-                  TextfieldComponent(
-                    focusnode: agefocusnode,
-                    label: AppLabels.age,
-                    controller: agecontroller,
-                    textinputtype: TextInputType.number,
-                    onFieldSubmitted: (_) {
-                      FocusScope.of(context).requestFocus(genderfocusnode);
-                    },
-                    validator: (value) {
-                      return Cm.validate(value, AppLabels.age, agefocusnode);
-                    },
+                  child: ButtonComponent(
+                    ontap: onTapSaveChanges,
+                    buttontitle: AppLabels.save_changes,
+                    isloading: state.editusersapicallstate == ApiCallState.busy
+                        ? true
+                        : false,
                   ),
-                  sb(20),
-                  TextfieldComponent(
-                    focusnode: genderfocusnode,
-                    label: AppLabels.gender,
-                    controller: gendercontroller,
-                    textinputtype: TextInputType.name,
-                    onFieldSubmitted: (_) {
-                      FocusScope.of(context).requestFocus(emailfocusnode);
-                    },
-                    validator: (value) {
-                      return Cm.validate(
-                        value,
-                        AppLabels.gender,
-                        genderfocusnode,
-                      );
-                    },
-                  ),
-                  sb(20),
-                  TextfieldComponent(
-                    focusnode: emailfocusnode,
-                    label: AppLabels.email,
-                    controller: emailcontroller,
-                    textinputtype: TextInputType.emailAddress,
-                    validator: (value) {
-                      return Cm.validate(
-                        value,
-                        AppLabels.email,
-                        emailfocusnode,
-                      );
-                    },
-                    enabled: false,
-                    suffixicon: Icons.lock_outlined,
-                  ),
-                  sb(200),
-                ],
-              ),
-            ),
-            bottomSheet: Padding(
-              padding: EdgeInsets.only(
-                left: AppPadding.lg,
-                right: AppPadding.lg,
-                bottom: AppPadding.lg,
-              ),
-              child: ButtonComponent(
-                ontap: onTapSaveChanges,
-                buttontitle: AppLabels.save_changes,
-                isloading: state.editusersapicallstate == ApiCallState.busy
-                    ? true
-                    : false,
-              ),
+                ),)
+              ],
             ),
           );
         },

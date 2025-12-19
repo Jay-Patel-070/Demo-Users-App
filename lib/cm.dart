@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:demo_users_app/extension.dart';
-import 'package:demo_users_app/helper/shared_preference_helper.dart';
+import 'package:demo_users_app/boxes/boxes.dart';
 import 'package:demo_users_app/main.dart';
 import 'package:demo_users_app/screens/users/model/user_response.dart';
 import 'package:demo_users_app/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
 
 Widget sb(double height) {
@@ -15,15 +15,6 @@ Widget sb(double height) {
 
 Widget sbw(double width) {
   return SizedBox(width: width);
-}
-
-getUserData() {
-  final userlocaldata = sharedprefshelper.getData(LocalStorageKeys.userData);
-  if (userlocaldata != null) {
-    final userData = UserResponse.fromJson(jsonDecode(userlocaldata));
-    return userData;
-  }
-  return null;
 }
 
 Future<String> getAccessToken() async{
@@ -103,8 +94,9 @@ class Cm {
     return null;
   }
 
-  static Widget showLoader() {
-    return CircularProgressIndicator(color: AppColors.primarycolor,);
+  static Widget showLoader({Color? color}) {
+    return CupertinoActivityIndicator(color: color ?? AppColors.primarycolor,radius: 13,);
+    // return CupertinoLinearActivityIndicator(progress: 0.1);
   }
 
   static void showSnackBar(

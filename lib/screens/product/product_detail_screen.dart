@@ -1,7 +1,5 @@
 import 'package:demo_users_app/cm.dart';
-import 'package:demo_users_app/components/appbar_component.dart';
 import 'package:demo_users_app/components/button_component.dart';
-import 'package:demo_users_app/extension.dart';
 import 'package:demo_users_app/screens/product/bloc/product_bloc.dart';
 import 'package:demo_users_app/screens/product/bloc/product_event.dart';
 import 'package:demo_users_app/screens/product/bloc/product_state.dart';
@@ -46,189 +44,247 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
       bloc: productbloc,
       listener: (context, state) {
         if (state.productapicallstate == ApiCallState.failure) {
-          Cm.showSnackBar(context, message: AppStrings.error_fetching_product_details);
+          Cm.showSnackBar(
+            context,
+            message: AppStrings.error_fetching_product_details,
+          );
         }
       },
       child: BlocBuilder<ProductBloc, ProductState>(
         bloc: productbloc,
         builder: (context, state) {
           return Scaffold(
-            appBar: PreferredSize(preferredSize: Size(double.infinity, 50), child: AppbarComponent(title: AppLabels.product_details,centertitle: true,)),
             body: state.productapicallstate == ApiCallState.busy
                 ? Center(child: Cm.showLoader())
-                : ListView(
-                    padding: .symmetric(horizontal: 16),
-                    children: [
-                      // ---------- Product Image ----------
-                      Container(
-                         height: 250,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: AppColors.greycolor.withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(AppRadius.lg),
-                          image: DecorationImage(
-                            image: NetworkImage(
-                              state.productdetailsmodel?.thumbnail ?? '',
+                : Stack(
+                  children: [
+                    CustomScrollView(
+                        slivers: [
+                          SliverAppBar(
+                            pinned: true,
+                            expandedHeight: 300,
+                            flexibleSpace: LayoutBuilder(
+                              builder: (context, constraints) {
+                                final collapsed = constraints.maxHeight < 120;
+                                return FlexibleSpaceBar(
+                                  collapseMode: CollapseMode.none,
+                                  title: AnimatedOpacity(
+                                    opacity: collapsed ? 1 : 0,
+                                    duration: Duration(milliseconds: 100),
+                                    child: Text(
+                                      AppLabels.product_details,
+                                      style: TextStyle(
+                                        fontSize: AppFontSizes.xxl,
+                                        fontFamily: Appfonts.robotobold,
+                                      ),
+                                    ),
+                                  ),
+                                  centerTitle: true,
+                                  background: Container(
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        image: NetworkImage(
+                                          state.productdetailsmodel?.thumbnail ??
+                                              '',
+                                        ),
+                                        fit: BoxFit.contain,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
                             ),
-                            fit: BoxFit.fitHeight,
                           ),
-                        ),
-                      ),
-                      sb( 16),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: Text(
-                              state.productdetailsmodel?.title ?? '',
-                              style: TextStyle(
-                                fontSize: AppFontSizes.display,
-                                fontFamily: Appfonts.robotobold
-                              ),
-                            ),
-                          ),
-                          Text(
-                            "\$${state.productdetailsmodel?.price}",
-                            style: TextStyle(
-                              fontSize: AppFontSizes.display,
-                              fontFamily: Appfonts.robotobold,
-                              color: AppColors.primarycolor,
+                          SliverToBoxAdapter(
+                            child: ListView(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              padding: .symmetric(horizontal: 16),
+                              children: [
+                                sb(16),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        state.productdetailsmodel?.title ?? '',
+                                        style: TextStyle(
+                                          fontSize: AppFontSizes.display,
+                                          fontFamily: Appfonts.robotobold,
+                                        ),
+                                      ),
+                                    ),
+                                    Text(
+                                      "\$${state.productdetailsmodel?.price}",
+                                      style: TextStyle(
+                                        fontSize: AppFontSizes.display,
+                                        fontFamily: Appfonts.robotobold,
+                                        color: AppColors.primarycolor,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                sb(10),
+                                SizedBox(
+                                  height: 50,
+                                  child: ListView.builder(
+                                    itemBuilder: (context, index) {
+                                      return Padding(
+                                        padding: EdgeInsets.all(AppPadding.xs),
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: AppColors.greywithshade
+                                                .withOpacity(0.2),
+                                            borderRadius: .circular(AppRadius.md),
+                                          ),
+                                          alignment: Alignment.center,
+                                          padding: .all(AppPadding.md),
+                                          child: Text(
+                                            state
+                                                    .productdetailsmodel
+                                                    ?.tags?[index] ??
+                                                '',
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    itemCount:
+                                        state.productdetailsmodel?.tags?.length ??
+                                        0,
+                                    scrollDirection: Axis.horizontal,
+                                  ),
+                                ),
+                                expansionTileSection(
+                                  title: AppLabels.product_description,
+                                  content: Text(
+                                    state.productdetailsmodel?.description ?? '',
+                                    style: TextStyle(
+                                      fontSize: AppFontSizes.md,
+                                      height: 1.4,
+                                      fontFamily: Appfonts.robotomedium,
+                                      color: AppColors.greywithshade,
+                                    ),
+                                  ),
+                                  initiallyExpanded: true,
+                                ),
+                                expansionTileSection(
+                                  title: AppLabels.product_details,
+                                  content: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      infoRow(
+                                        AppLabels.stock,
+                                        state.productdetailsmodel?.stock
+                                                .toString() ??
+                                            '',
+                                      ),
+                                      infoRow(
+                                        AppLabels.sku,
+                                        state.productdetailsmodel?.sku ?? '',
+                                      ),
+                                      infoRow(
+                                        AppLabels.weight,
+                                        "${state.productdetailsmodel?.weight}",
+                                      ),
+                                      infoRow(
+                                        AppLabels.discount,
+                                        "${state.productdetailsmodel?.discountPercentage}%",
+                                      ),
+                                      infoRow(
+                                        AppLabels.warranty,
+                                        "${state.productdetailsmodel?.warrantyInformation}",
+                                      ),
+                                      infoRow(
+                                        AppLabels.shipping,
+                                        "${state.productdetailsmodel?.shippingInformation}",
+                                      ),
+                                      infoRow(
+                                        AppLabels.return_policy,
+                                        "${state.productdetailsmodel?.returnPolicy}",
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                expansionTileSection(
+                                  title: AppLabels.dimensions,
+                                  content: Column(
+                                    children: [
+                                      infoRow(
+                                        AppLabels.width,
+                                        "${state.productdetailsmodel?.dimensions?.width}",
+                                      ),
+                                      infoRow(
+                                        AppLabels.height,
+                                        "${state.productdetailsmodel?.dimensions?.height}",
+                                      ),
+                                      infoRow(
+                                        AppLabels.depth,
+                                        "${state.productdetailsmodel?.dimensions?.depth}",
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                expansionTileSection(
+                                  title: AppLabels.reviews,
+                                  content: ListView.builder(
+                                    padding: .all(0),
+                                    itemCount:
+                                        state
+                                            .productdetailsmodel
+                                            ?.reviews
+                                            ?.length ??
+                                        0,
+                                    shrinkWrap: true,
+                                    physics: NeverScrollableScrollPhysics(),
+                                    itemBuilder: (context, index) {
+                                      return reviewCard(
+                                        name:
+                                            state
+                                                .productdetailsmodel
+                                                ?.reviews?[index]
+                                                .reviewerName ??
+                                            '',
+                                        rating:
+                                            state
+                                                .productdetailsmodel
+                                                ?.reviews?[index]
+                                                .rating ??
+                                            0,
+                                        comment:
+                                            state
+                                                .productdetailsmodel
+                                                ?.reviews?[index]
+                                                .comment ??
+                                            '',
+                                      );
+                                    },
+                                  ),
+                                ),
+                                sb(200),
+                              ],
                             ),
                           ),
                         ],
                       ),
-                      sb(10),
-                      SizedBox(
-                        height: 50,
-                        child: ListView.builder(
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding: EdgeInsets.all(AppPadding.xs),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color:AppColors.greywithshade.withOpacity(0.2),
-                                  borderRadius: .circular(AppRadius.md),
-                                ),
-                                alignment: Alignment.center,
-                                padding: .all(AppPadding.md),
-                                child: Text(
-                                    state.productdetailsmodel?.tags?[index] ?? '',
-                                  ),
-                              ),
-                            );
-                          },
-                          itemCount: state.productdetailsmodel?.tags?.length ?? 0,
-                          scrollDirection: Axis.horizontal,
-                        ),
+                    Positioned(
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                        left: AppPadding.lg,
+                        right: AppPadding.lg,
+                        bottom: AppPadding.lg,
                       ),
-                      expansionTileSection(
-                        title: AppLabels.product_description,
-                        content: Text(
-                          state.productdetailsmodel?.description ?? '',
-                          style: TextStyle(
-                            fontSize: AppFontSizes.md,
-                             height: 1.4,
-                            fontFamily: Appfonts.robotomedium,
-                            color: AppColors.greywithshade
-                          ),
-                        ),
-                        initiallyExpanded: true,
+                      child: ButtonComponent(
+                        ontap: () {
+                          Navigator.pop(context, state.productdetailsmodel?.title);
+                        },
+                        buttontitle: AppLabels.add_to_cart,
                       ),
-                      expansionTileSection(
-                        title: AppLabels.product_details,
-                        content: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            infoRow(
-                              AppLabels.stock,
-                              state.productdetailsmodel?.stock.toString() ?? '',
-                            ),
-                            infoRow(
-                              AppLabels.sku,
-                              state.productdetailsmodel?.sku ?? '',
-                            ),
-                            infoRow(
-                              AppLabels.weight,
-                              "${state.productdetailsmodel?.weight}",
-                            ),
-                            infoRow(
-                              AppLabels.discount,
-                              "${state.productdetailsmodel?.discountPercentage}%",
-                            ),
-                            infoRow(
-                              AppLabels.warranty,
-                              "${state.productdetailsmodel?.warrantyInformation}",
-                            ),
-                            infoRow(
-                              AppLabels.shipping,
-                              "${state.productdetailsmodel?.shippingInformation}",
-                            ),
-                            infoRow(
-                              AppLabels.return_policy,
-                              "${state.productdetailsmodel?.returnPolicy}",
-                            ),
-                          ],
-                        ),
-                      ),
-                      expansionTileSection(
-                        title: AppLabels.dimensions,
-                        content: Column(
-                          children: [
-                            infoRow(
-                              AppLabels.width,
-                              "${state.productdetailsmodel?.dimensions?.width}",
-                            ),
-                            infoRow(
-                              AppLabels.height,
-                              "${state.productdetailsmodel?.dimensions?.height}",
-                            ),
-                            infoRow(
-                              AppLabels.depth,
-                              "${state.productdetailsmodel?.dimensions?.depth}",
-                            ),
-                          ],
-                        ),
-                      ),
-                      expansionTileSection(
-                        title: AppLabels.reviews,
-                        content: ListView.builder(
-                          itemCount:
-                              state.productdetailsmodel?.reviews?.length ?? 0,
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemBuilder: (context, index) {
-                            return reviewCard(
-                              name:
-                                  state
-                                      .productdetailsmodel
-                                      ?.reviews?[index]
-                                      .reviewerName ??
-                                  '',
-                              rating:
-                                  state
-                                      .productdetailsmodel
-                                      ?.reviews?[index]
-                                      .rating ??
-                                  0,
-                              comment:
-                                  state
-                                      .productdetailsmodel
-                                      ?.reviews?[index]
-                                      .comment ??
-                                  '',
-                            );
-                          },
-                        ),
-                      ),
-                      sb(200),
-                    ],
-                  ),
-            bottomSheet: Padding(
-              padding: EdgeInsets.only(left: AppPadding.lg, right: AppPadding.lg, bottom: AppPadding.lg),
-              child: ButtonComponent(ontap: () {
-                Navigator.pop(context,state.productdetailsmodel?.title);
-              }, buttontitle: AppLabels.add_to_cart),
-            ),
+                    ),)
+                  ],
+                ),
           );
         },
       ),
@@ -244,13 +300,16 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         children: [
           Text(
             title,
-            style: TextStyle(fontSize: AppFontSizes.md, color: AppColors.greywithshade),
+            style: TextStyle(
+              fontSize: AppFontSizes.md,
+              color: AppColors.greywithshade,
+            ),
           ),
           Text(
             value,
             style: TextStyle(
               fontSize: AppFontSizes.md,
-              fontFamily: Appfonts.roboto
+              fontFamily: Appfonts.roboto,
             ),
           ),
         ],
@@ -283,7 +342,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   name,
                   style: TextStyle(
                     fontSize: AppFontSizes.lg,
-                    fontFamily: Appfonts.robotomedium
+                    fontFamily: Appfonts.robotomedium,
                   ),
                 ),
                 Row(
@@ -295,10 +354,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 ),
               ],
             ),
-            sb( 6),
+            sb(6),
             Text(
               comment,
-              style: TextStyle(fontSize: AppFontSizes.md,  height: 1.3),
+              style: TextStyle(fontSize: AppFontSizes.md, height: 1.3),
             ),
           ],
         ),
@@ -317,7 +376,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         title,
         style: TextStyle(
           fontSize: AppFontSizes.lg,
-          fontFamily: Appfonts.robotobold
+          fontFamily: Appfonts.robotobold,
         ),
       ),
       tilePadding: .all(0),

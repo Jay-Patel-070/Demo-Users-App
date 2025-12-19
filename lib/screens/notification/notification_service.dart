@@ -2,12 +2,9 @@ import 'dart:convert';
 import 'package:demo_users_app/bottom_navigation_barr.dart';
 import 'package:demo_users_app/cm.dart';
 import 'package:demo_users_app/screens/notification/model/notification_model.dart';
-import 'package:demo_users_app/screens/notification/notification_screen.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
-
 import '../../main.dart';
 import '../../utils/utils.dart';
 
@@ -69,7 +66,8 @@ class NotificationService {
     if (_initialPayload == "schedule notification") {
       Future.delayed(Duration(seconds: 2),() {
         callNextScreenAndClearStack(navigatorKey.currentContext!, BottomNavigationBarr(isfromnotificationtap: true,));
-      },);
+        },
+      );
       // // Clear the payload after handling to prevent re-navigation
       // _initialPayload = null;
     }

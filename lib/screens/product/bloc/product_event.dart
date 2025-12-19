@@ -8,7 +8,8 @@ class FetchAllProductsEvent extends ProductEvent {
   final String? sortBy;
   final String? category;
   final int? skip;
-  FetchAllProductsEvent({this.search, this.sortBy, this.category, this.skip});
+  final num? limit;
+  FetchAllProductsEvent({this.search, this.sortBy, this.category, this.skip, this.limit});
 }
 
 class FetchProductsEventById extends ProductEvent {

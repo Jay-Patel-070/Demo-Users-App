@@ -13,6 +13,7 @@ class ProductDatarepository {
     String? sortBy,
     String? category,
     int? skip,
+    num? limit
   }) async {
     try {
       Response result = await productdatasource.getallproducts(
@@ -20,6 +21,7 @@ class ProductDatarepository {
         sortBy: sortBy,
         category: category,
         skip: skip,
+        limit: limit
       );
       if (result.statusCode == 200) {
         final data = ProductModel.fromJson(jsonDecode(result.body));

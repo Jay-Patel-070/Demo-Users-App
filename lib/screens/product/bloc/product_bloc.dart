@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:demo_users_app/screens/product/bloc/product_event.dart';
 import 'package:demo_users_app/screens/product/bloc/product_state.dart';
 import 'package:demo_users_app/screens/product/data/product_datarepository.dart';
@@ -25,6 +23,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
         sortBy: event.sortBy,
         category: event.category,
         skip: event.skip,
+        limit: event.limit
       );
       emit(state.copywith(productapicallstate: ApiCallState.busy));
       result.when(
@@ -43,11 +42,10 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
             emit(
               state.copywith(
                 productModel: ProductModel(products: previous,total: state.productModel?.total,),
-                productapicallstate: ApiCallState.success,
+                loadmoreProductState: ApiCallState.success,
               ),
             );
-            emit(state.copywith(loadmoreProductState: ApiCallState.none));
-          emit(state.copywith(productapicallstate: ApiCallState.none));
+            emit(state.copywith(loadmoreProductState: ApiCallState.none,productapicallstate: ApiCallState.none));
           }
         },
         failure: (error) {

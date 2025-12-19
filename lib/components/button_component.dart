@@ -1,3 +1,4 @@
+import 'package:demo_users_app/cm.dart';
 import 'package:demo_users_app/utils/utils.dart';
 import 'package:flutter/material.dart';
 
@@ -23,7 +24,7 @@ class ButtonComponent extends StatelessWidget {
           disabledBackgroundColor: AppColors.primarycolor
         ),
         onPressed: ontap,
-        child: isloading == true ? Transform.scale(scale: 0.6,child: CircularProgressIndicator(color: AppColors.whitecolor,)) : Text(buttontitle,textAlign: TextAlign.center,style: TextStyle(
+        child: isloading == true ? Transform.scale(scale: 0.6,child: Cm.showLoader(color: AppColors.whitecolor)) : Text(buttontitle,textAlign: TextAlign.center,style: TextStyle(
           color: Colors.white,
           fontFamily: Appfonts.robotomedium,
           fontSize: AppFontSizes.xl,

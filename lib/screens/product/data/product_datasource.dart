@@ -1,8 +1,6 @@
-import 'dart:convert';
 import 'package:demo_users_app/extension.dart';
 import 'package:demo_users_app/http/my_app_http.dart';
 import 'package:demo_users_app/utils/api_constant.dart';
-import 'package:http/http.dart' as http;
 
 class ProductDatasource {
   Future<dynamic> getallproducts({
@@ -10,6 +8,7 @@ class ProductDatasource {
     String? sortBy,
     String? category,
     int? skip,
+    num? limit
   }) async {
     try {
       var buffer = StringBuffer(ApiConstant.products);
@@ -23,7 +22,7 @@ class ProductDatasource {
         buffer.write("/category/$category");
       }
       if (skip != null) {
-        buffer.write("/?limit=15&skip=$skip");
+        buffer.write("/?limit=${limit ?? 16}&skip=$skip");
       }
       final response = await getMethod(endpoint: buffer.toString());
       return response;

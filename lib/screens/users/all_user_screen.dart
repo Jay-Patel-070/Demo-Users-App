@@ -2,6 +2,7 @@ import 'package:demo_users_app/cm.dart';
 import 'package:demo_users_app/components/appbar_component.dart';
 import 'package:demo_users_app/components/searchbar_component.dart';
 import 'package:demo_users_app/components/user_listtile_component.dart';
+import 'package:demo_users_app/screens/weather/weather_screen.dart';
 import 'package:demo_users_app/utils/utils.dart';
 import 'package:flutter/material.dart';
 
@@ -41,9 +42,11 @@ class _AllUserScreenState extends State<AllUserScreen> {
           centertitle: true,
           actions: [
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                callNextScreen(context, WeatherScreen());
+              },
               icon: Icon(
-                Icons.tune_outlined,
+                Icons.sunny,
                 size: 25,
                 color: AppColors.greywithshade,
               ),

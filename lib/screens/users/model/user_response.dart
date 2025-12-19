@@ -1,31 +1,63 @@
+import 'package:hive/hive.dart';
+part 'user_response.g.dart';
+
+@HiveType(typeId: 0)
 class UserResponse {
+  @HiveField(0)
   int? id;
+  @HiveField(1)
   String? firstName;
+  @HiveField(2)
   String? lastName;
+  @HiveField(3)
   String? maidenName;
+  @HiveField(4)
   int? age;
+  @HiveField(5)
   String? gender;
+  @HiveField(6)
   String? email;
+  @HiveField(7)
   String? phone;
+  @HiveField(8)
   String? username;
+  @HiveField(9)
   String? password;
+  @HiveField(10)
   String? birthDate;
+  @HiveField(11)
   String? image;
+  @HiveField(12)
   String? bloodGroup;
+  @HiveField(13)
   double? height;
+  @HiveField(14)
   double? weight;
+  @HiveField(15)
   String? eyeColor;
+  @HiveField(16)
   Hair? hair;
+  @HiveField(17)
   String? ip;
+  @HiveField(18)
   Address? address;
+  @HiveField(19)
   String? macAddress;
+  @HiveField(20)
   String? university;
+  @HiveField(21)
   Bank? bank;
+  @HiveField(22)
   Company? company;
+  @HiveField(23)
   String? ein;
+  @HiveField(24)
   String? ssn;
+  @HiveField(25)
   String? userAgent;
+  @HiveField(26)
   Crypto? crypto;
+  @HiveField(27)
   String? role;
 
   UserResponse(
@@ -136,8 +168,11 @@ class UserResponse {
   }
 }
 
+@HiveType(typeId: 1)
 class Hair {
+  @HiveField(0)
   String? color;
+  @HiveField(1)
   String? type;
 
   Hair({this.color, this.type});
@@ -155,13 +190,21 @@ class Hair {
   }
 }
 
+@HiveType(typeId: 2)
 class Address {
+  @HiveField(0)
   String? address;
+  @HiveField(1)
   String? city;
+  @HiveField(2)
   String? state;
+  @HiveField(3)
   String? stateCode;
+  @HiveField(4)
   String? postalCode;
+  @HiveField(5)
   Coordinates? coordinates;
+  @HiveField(6)
   String? country;
 
   Address(
@@ -200,8 +243,11 @@ class Address {
   }
 }
 
+@HiveType(typeId: 3)
 class Coordinates {
+  @HiveField(0)
   double? lat;
+  @HiveField(1)
   double? lng;
 
   Coordinates({this.lat, this.lng});
@@ -219,11 +265,17 @@ class Coordinates {
   }
 }
 
+@HiveType(typeId: 4)
 class Bank {
+  @HiveField(0)
   String? cardExpire;
+  @HiveField(1)
   String? cardNumber;
+  @HiveField(2)
   String? cardType;
+  @HiveField(3)
   String? currency;
+  @HiveField(4)
   String? iban;
 
   Bank(
@@ -252,10 +304,15 @@ class Bank {
   }
 }
 
+@HiveType(typeId: 5)
 class Company {
+  @HiveField(0)
   String? department;
+  @HiveField(1)
   String? name;
+  @HiveField(2)
   String? title;
+  @HiveField(3)
   Address? address;
 
   Company({this.department, this.name, this.title, this.address});
@@ -280,9 +337,13 @@ class Company {
   }
 }
 
+@HiveType(typeId: 6)
 class Crypto {
+  @HiveField(0)
   String? coin;
+  @HiveField(1)
   String? wallet;
+  @HiveField(2)
   String? network;
 
   Crypto({this.coin, this.wallet, this.network});

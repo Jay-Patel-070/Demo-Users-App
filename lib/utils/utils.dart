@@ -106,6 +106,7 @@ class AppStrings {
   static const String select_date = "Select Date";
   static const String select_time = "Select Time";
   static const String added_to_cart = "Added to cart";
+  static const String no_products_found = 'No products found';
 }
 
 class Appfonts {
@@ -119,8 +120,16 @@ class Appfonts {
 class LocalStorageKeys {
   static const String accessToken = "accessToken";
   static const String refreshToken = "refreshToken";
-  static const String userData = "userData";
+  // static const String userData = "userData";
   static const String notifications = "notifications";
+}
+
+class HiveLocalStorageBox {
+  static const String userBox = "userBox";
+}
+
+class HiveLocalStorageKeys {
+  static const String userData = "userData";
 }
 
 class AppFontSizes {

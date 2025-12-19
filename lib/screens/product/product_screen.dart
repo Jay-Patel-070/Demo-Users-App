@@ -7,9 +7,10 @@ import 'package:demo_users_app/screens/product/bloc/product_event.dart';
 import 'package:demo_users_app/screens/product/bloc/product_state.dart';
 import 'package:demo_users_app/screens/product/data/product_datarepository.dart';
 import 'package:demo_users_app/screens/product/data/product_datasource.dart';
-import 'package:demo_users_app/screens/product/model/product_model.dart';
 import 'package:demo_users_app/screens/product/product_detail_screen.dart';
 import 'package:demo_users_app/screens/product/product_item_card.dart';
+import 'package:demo_users_app/screens/product/productcategorygraph_screen.dart';
+import 'package:demo_users_app/screens/product/shimmer/product_screen_shimmers.dart';
 import 'package:demo_users_app/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -148,6 +149,9 @@ class _ProductScreenState extends State<ProductScreen> {
             title: AppLabels.products,
             centertitle: true,
             actions: [
+              IconButton(onPressed: () {
+                callNextScreen(context, ProductcategorygraphScreen());
+              }, icon: Icon(Icons.bar_chart)),
               IconButton(onPressed: () {
                 callNextScreen(context, NotificationScreen());
               }, icon: Icon(Icons.notifications_outlined)),
@@ -334,14 +338,15 @@ class _ProductScreenState extends State<ProductScreen> {
                         ),
                         if (state.productapicallstate == ApiCallState.busy)
                           Expanded(
-                            child: Center(
-                              child: Cm.showLoader(),
-                            ),
+                            child: gridShimmer(itemCount: 6), // initial shimmer
                           )
                         else
-                          Expanded(
+                          if(state.productModel?.products?.isEmpty == true)
+                            Expanded(child: Center(child: Text(AppStrings.no_products_found)))
+                          else
+                            Expanded(
                             // flex: 10,
-                            child: RefreshIndicator(
+                              child: RefreshIndicator(
                               color: AppColors.primarycolor,
                               onRefresh: onReferesh,
                               child: ListView(
@@ -389,8 +394,9 @@ class _ProductScreenState extends State<ProductScreen> {
                                       ApiCallState.busy)
                                     Padding(
                                       padding: EdgeInsets.all(AppPadding.md),
-                                      child: Center(
-                                        child: Cm.showLoader(),
+                                      child: SizedBox(
+                                        height: 150,
+                                        child: gridShimmer(itemCount: 2), // small shimmer at bottom
                                       ),
                                     ),
                                 ],
